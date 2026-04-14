@@ -1,3 +1,4 @@
 project_id   = "your-gcp-project-id"
 bucket_name  = "your-org-tf-state"   # must be globally unique
 region       = "US"
+# state_version_retention_days = 90  # days before old archived state versions become eligible for deletion

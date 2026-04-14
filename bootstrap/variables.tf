@@ -16,6 +16,6 @@ variable "region" {
 
 variable "state_version_retention_days" {
   type        = number
-  description = "Days to retain old state object versions before deletion"
+  description = "Minimum age in days before an archived (non-current) state version is eligible for deletion. Versions are only deleted when both this age threshold AND num_newer_versions >= 5 conditions are met."
   default     = 90
 }
