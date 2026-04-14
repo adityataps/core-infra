@@ -20,7 +20,7 @@ Terraform monorepo managing personal cloud infrastructure across GCP, AWS, and o
 ## First-time setup
 
 1. `cd bootstrap && cp terraform.tfvars.example terraform.tfvars` — fill in values
-2. `cd bootstrap && terraform init && terraform apply`
+2. `cd bootstrap && terraform init && terraform plan && terraform apply`
 3. `cd providers/gcp/projects/my-project && cp terraform.tfvars.example terraform.tfvars` — fill in values
 4. `terraform init && terraform plan`
 5. Import existing resources (see CLAUDE.md)

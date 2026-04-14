@@ -4,9 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a Terraform repository for managing core cloud infrastructure resources. It is currently in early initialization — Terraform modules and configurations are expected to be added under `scripts/` or at the root.
+This is a Terraform monorepo managing personal cloud infrastructure across GCP, AWS, and other providers. Each provider lives under `providers/` and is independently deployable with its own remote state. The `bootstrap/` directory creates the shared GCS remote state bucket and is run once.
 
 ## Common Commands
+
+> Run all Terraform commands from within a specific directory (e.g. `bootstrap/` or `providers/gcp/projects/my-project/`) — there is no root-level Terraform configuration.
 
 ```bash
 # Initialize Terraform (required before plan/apply)
@@ -36,7 +38,11 @@ terraform destroy
 
 ## Structure
 
-- `scripts/` — intended for shell or automation scripts supporting infrastructure workflows (currently empty).
+- `bootstrap/` — creates the GCS remote state bucket (run once, local state).
+- `providers/gcp/modules/baseline/` — reusable module configuring GCP project defaults.
+- `providers/gcp/projects/<name>/` — per-project instantiation of the baseline module.
+- `providers/aws/` — AWS infrastructure (future, same pattern).
+- `scripts/` — helper scripts for import, init, etc.
 
 ## Pre-commit Hooks
 
