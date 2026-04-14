@@ -11,7 +11,11 @@ resource "google_service_account" "github_actions" {
   depends_on = [google_project_service.apis]
 }
 
-# Grant the SA permissions needed to run terraform plan/apply
+# Grant the SA permissions needed to run terraform plan/apply.
+# Note: iam.securityAdmin + resourcemanager.projectIamAdmin together allow the SA
+# to set any IAM policy on this project (required for Terraform to manage IAM bindings).
+# This is an accepted tradeoff for a Terraform-managed project SA — scoped to this
+# single project only. Do not reuse this module for multi-project shared SAs.
 resource "google_project_iam_member" "github_actions_roles" {
   for_each = var.github_repo != null ? toset([
     "roles/viewer",
@@ -20,7 +24,7 @@ resource "google_project_iam_member" "github_actions_roles" {
     "roles/serviceusage.serviceUsageAdmin",
     "roles/billing.projectManager",
     "roles/monitoring.editor",
-    "roles/logging.admin",
+    "roles/logging.configWriter",
   ]) : toset([])
 
   project = google_project.this.project_id
