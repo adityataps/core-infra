@@ -63,3 +63,9 @@ variable "github_repo" {
   description = "GitHub repo for WIF in 'owner/repo' format. Null skips WIF setup."
   default     = null
 }
+
+variable "enable_data_access_audit_logs" {
+  type        = bool
+  description = "Enable DATA_READ and DATA_WRITE audit logs. Billable beyond 50 GiB/month free tier."
+  default     = true
+}
