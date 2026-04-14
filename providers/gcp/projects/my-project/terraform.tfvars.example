@@ -1,0 +1,24 @@
+project_id      = "your-gcp-project-id"
+project_name    = "My GCP Project"
+billing_account = "XXXXXX-XXXXXX-XXXXXX"
+admin_user      = "you@gmail.com"
+region          = "us-central1"
+budget_amount   = 20
+budget_thresholds = [0.5, 0.9, 1.0]
+github_repo     = "your-github-username/core-infra"
+
+labels = {
+  env          = "personal"
+  owner        = "your-name"
+  "managed-by" = "terraform"
+}
+
+enabled_apis = [
+  "compute.googleapis.com",
+  "iam.googleapis.com",
+  "cloudbilling.googleapis.com",
+  "cloudresourcemanager.googleapis.com",
+  "logging.googleapis.com",
+  "monitoring.googleapis.com",
+  "iamcredentials.googleapis.com",
+]

@@ -1,0 +1,65 @@
+variable "project_id" {
+  type        = string
+  description = "GCP project ID"
+}
+
+variable "project_name" {
+  type        = string
+  description = "Human-readable display name for the GCP project"
+}
+
+variable "billing_account" {
+  type        = string
+  description = "Billing account ID (format: XXXXXX-XXXXXX-XXXXXX)"
+}
+
+variable "admin_user" {
+  type        = string
+  description = "Google account email to bind as project owner"
+}
+
+variable "region" {
+  type        = string
+  description = "Default GCP region"
+  default     = "us-central1"
+}
+
+variable "budget_amount" {
+  type        = number
+  description = "Monthly budget cap in USD"
+}
+
+variable "budget_thresholds" {
+  type        = list(number)
+  description = "Fractional spend thresholds for budget alerts"
+  default     = [0.5, 0.9, 1.0]
+}
+
+variable "labels" {
+  type        = map(string)
+  description = "Labels to apply to the project"
+  default = {
+    env          = "personal"
+    "managed-by" = "terraform"
+  }
+}
+
+variable "enabled_apis" {
+  type        = list(string)
+  description = "GCP APIs to enable"
+  default = [
+    "compute.googleapis.com",
+    "iam.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "iamcredentials.googleapis.com",
+  ]
+}
+
+variable "github_repo" {
+  type        = string
+  description = "GitHub repo for WIF in 'owner/repo' format. Null skips WIF setup."
+  default     = null
+}
