@@ -36,7 +36,12 @@ variable "region" {
 
 variable "budget_amount" {
   type        = number
-  description = "Monthly budget cap in USD"
+  description = "Monthly budget cap in whole USD dollars (fractional amounts not supported by the GCP Billing Budgets API)"
+
+  validation {
+    condition     = var.budget_amount == floor(var.budget_amount) && var.budget_amount > 0
+    error_message = "budget_amount must be a positive whole number (e.g. 20, not 19.99)."
+  }
 }
 
 variable "budget_thresholds" {
@@ -81,4 +86,10 @@ variable "github_repo" {
     condition     = var.github_repo == null || can(regex("^[^/]+/[^/]+$", var.github_repo))
     error_message = "github_repo must be in 'owner/repo' format (e.g. 'my-org/my-repo')."
   }
+}
+
+variable "enable_data_access_audit_logs" {
+  type        = bool
+  description = "Enable DATA_READ and DATA_WRITE audit logs for all services. Note: these are billable beyond the 50 GiB/month free tier. ADMIN_READ logs are always enabled (free)."
+  default     = true
 }
