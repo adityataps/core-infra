@@ -11,11 +11,21 @@ variable "project_name" {
 variable "billing_account" {
   type        = string
   description = "Billing account ID to associate with the project (format: XXXXXX-XXXXXX-XXXXXX)"
+
+  validation {
+    condition     = can(regex("^[0-9A-Fa-f]{6}-[0-9A-Fa-f]{6}-[0-9A-Fa-f]{6}$", var.billing_account))
+    error_message = "billing_account must be in the format XXXXXX-XXXXXX-XXXXXX (hex characters)."
+  }
 }
 
 variable "admin_user" {
   type        = string
   description = "Google account email to bind as project owner (e.g. user@gmail.com)"
+
+  validation {
+    condition     = can(regex("^[^@]+@[^@]+\\.[^@]+$", var.admin_user))
+    error_message = "admin_user must be a valid email address."
+  }
 }
 
 variable "region" {
@@ -31,12 +41,12 @@ variable "budget_amount" {
 
 variable "budget_thresholds" {
   type        = list(number)
-  description = "Fractional spend thresholds that trigger email alerts (e.g. [0.5, 0.9, 1.0])"
+  description = "Fractional spend thresholds that trigger email alerts. Values between 0 (exclusive) and 1.5; values above 1.0 represent over-budget thresholds (e.g. 1.2 = 120%). Maximum 5 thresholds."
   default     = [0.5, 0.9, 1.0]
 
   validation {
-    condition     = alltrue([for t in var.budget_thresholds : t > 0 && t <= 1.5])
-    error_message = "Budget thresholds must be between 0 and 1.5."
+    condition     = length(var.budget_thresholds) >= 1 && length(var.budget_thresholds) <= 5 && alltrue([for t in var.budget_thresholds : t > 0 && t <= 1.5])
+    error_message = "Each budget threshold must be greater than 0 and at most 1.5, and the list must contain between 1 and 5 thresholds (GCP API limit)."
   }
 }
 
@@ -64,6 +74,11 @@ variable "enabled_apis" {
 
 variable "github_repo" {
   type        = string
-  description = "GitHub repository for Workload Identity Federation in 'owner/repo' format. Set to null to skip WIF setup."
+  description = "GitHub repository for Workload Identity Federation in 'owner/repo' format (e.g. 'my-org/my-repo'). Set to null to skip WIF setup."
   default     = null
+
+  validation {
+    condition     = var.github_repo == null || can(regex("^[^/]+/[^/]+$", var.github_repo))
+    error_message = "github_repo must be in 'owner/repo' format (e.g. 'my-org/my-repo')."
+  }
 }
