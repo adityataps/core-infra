@@ -1,0 +1,3 @@
+project_id   = "your-gcp-project-id"
+bucket_name  = "your-org-tf-state"   # must be globally unique
+region       = "US"
