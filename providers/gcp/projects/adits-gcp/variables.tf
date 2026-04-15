@@ -61,6 +61,7 @@ variable "enabled_apis" {
     "compute.googleapis.com",
     "iam.googleapis.com",
     "cloudbilling.googleapis.com",
+    "billingbudgets.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
