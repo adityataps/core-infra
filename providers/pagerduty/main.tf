@@ -1,5 +1,6 @@
-# Import the existing escalation policy — run:
-#   terraform import pagerduty_escalation_policy.default <ESCALATION_POLICY_ID>
+# Import the existing escalation policy from PagerDuty before first apply.
+# Find the ID in the PagerDuty URL: Settings → Escalation Policies → click policy → copy ID from URL path.
+# Run: terraform import pagerduty_escalation_policy.default <ESCALATION_POLICY_ID>
 resource "pagerduty_escalation_policy" "default" {
   name      = "Default"
   num_loops = 2
@@ -25,7 +26,7 @@ resource "pagerduty_service" "gcp_monitoring" {
   name                    = "GCP Monitoring"
   escalation_policy       = pagerduty_escalation_policy.default.id
   auto_resolve_timeout    = 86400
-  acknowledgement_timeout = "null"
+  acknowledgement_timeout = 0
   alert_creation          = "create_alerts_and_incidents"
 }
 
