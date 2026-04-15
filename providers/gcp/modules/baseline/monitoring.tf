@@ -10,9 +10,9 @@ resource "google_monitoring_alert_policy" "default" {
   conditions {
     display_name = "Stub — replace with real condition"
     condition_threshold {
-      filter          = "resource.type=\"global\""
+      filter          = "resource.type=\"gce_instance\" AND metric.type=\"compute.googleapis.com/instance/cpu/utilization\""
       comparison      = "COMPARISON_GT"
-      threshold_value = 0
+      threshold_value = 0.99
       duration        = "0s"
     }
   }
