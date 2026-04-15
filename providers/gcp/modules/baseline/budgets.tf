@@ -45,12 +45,11 @@ resource "google_billing_budget" "project" {
   }
 
   all_updates_rule {
-    monitoring_notification_channels = compact([
+    # Billing Budgets API only supports email and Pub/Sub notification channels.
+    # PagerDuty routing for budget alerts is not supported here.
+    monitoring_notification_channels = [
       google_monitoring_notification_channel.budget_email.id,
-      length(google_monitoring_notification_channel.pagerduty) > 0
-      ? google_monitoring_notification_channel.pagerduty[0].id
-      : null
-    ])
+    ]
     disable_default_iam_recipients = true
   }
 }

@@ -11,7 +11,7 @@ resource "google_monitoring_alert_policy" "default" {
     display_name = "Stub — replace with real condition"
     condition_threshold {
       filter          = "resource.type=\"global\""
-      comparison      = "COMPARISON_EQ"
+      comparison      = "COMPARISON_GT"
       threshold_value = 0
       duration        = "0s"
     }
