@@ -1,0 +1,3 @@
+public_key  = "your-atlas-public-key"
+private_key = "your-atlas-private-key"
+org_id      = "your-atlas-org-id"
