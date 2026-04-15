@@ -70,19 +70,31 @@ jobs:
         with:
           script: |
             const project = '${{ matrix.project }}';
-            const planOutput = `${{ steps.plan.outputs.plan_output }}`;
+            const planOutput = `${{ steps.plan.outputs.plan_output }}`.trim();
             const planStatus = '${{ steps.plan.outcome }}' === 'success' ? '✅' : '❌';
+
+            if (!planOutput) {
+              console.log('No plan output captured, skipping comment.');
+              return;
+            }
+
+            const maxLength = 60000;
+            const truncated = planOutput.length > maxLength
+              ? planOutput.substring(0, maxLength) + '\n\n... output truncated (exceeded 60,000 chars)'
+              : planOutput;
+
             const body = [
               `### ${planStatus} Terraform Plan: \`${project}\``,
               '',
               '<details><summary>Show Plan</summary>',
               '',
               '```terraform',
-              planOutput,
+              truncated,
               '```',
               '',
               '</details>'
             ].join('\n');
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
