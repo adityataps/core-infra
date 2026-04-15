@@ -19,7 +19,7 @@ data "pagerduty_user" "admin" {
 }
 
 data "pagerduty_vendor" "gcp" {
-  name = "Google Cloud Platform"
+  name = "Google Cloud Monitoring"
 }
 
 resource "pagerduty_service" "gcp_monitoring" {
