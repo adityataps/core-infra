@@ -86,9 +86,3 @@ variable "enable_data_access_audit_logs" {
   default     = true
 }
 
-variable "pagerduty_integration_key" {
-  type        = string
-  description = "PagerDuty integration key for GCP monitoring alerts. Null disables PagerDuty routing."
-  default     = null
-  sensitive   = true
-}

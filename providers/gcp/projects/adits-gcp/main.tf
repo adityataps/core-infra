@@ -15,6 +15,14 @@ provider "google" {
   user_project_override = true
 }
 
+data "terraform_remote_state" "pagerduty" {
+  backend = "gcs"
+  config = {
+    bucket = "adits-gcp-core-infra-tfstate"
+    prefix = "pagerduty"
+  }
+}
+
 module "baseline" {
   source = "../../modules/baseline"
 
@@ -29,5 +37,5 @@ module "baseline" {
   enabled_apis                  = var.enabled_apis
   github_repo                   = var.github_repo
   enable_data_access_audit_logs = var.enable_data_access_audit_logs
-  pagerduty_integration_key     = var.pagerduty_integration_key
+  pagerduty_integration_key     = data.terraform_remote_state.pagerduty.outputs.integration_key
 }

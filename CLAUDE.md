@@ -84,15 +84,16 @@ These are populated after the first `terraform apply` of the GCP baseline.
 
 ## PagerDuty Integration
 
-The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. After making changes to PagerDuty resources, apply that root first, then copy the integration key to the GCP project tfvars and apply GCP.
+The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. The integration key is read automatically via `terraform_remote_state` — no manual copy-paste required. Apply PagerDuty first, then GCP.
 
 ### First-time setup
 
 1. Get the existing escalation policy ID from PagerDuty (Settings → Escalation Policies → click the policy → copy the ID from the URL: `/escalation_policies/<ID>`)
 2. Fill in `providers/pagerduty/terraform.tfvars` (gitignored):
    ```hcl
-   api_token   = "your-pagerduty-api-token"
-   admin_email = "you@example.com"
+   api_token      = "your-pagerduty-api-token"
+   admin_email    = "you@example.com"
+   gcp_project_id = "your-gcp-project-id"
    ```
 3. Initialize and import the existing escalation policy:
    ```bash
@@ -101,19 +102,11 @@ The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. A
    terraform import pagerduty_escalation_policy.default <ESCALATION_POLICY_ID>
    ```
 4. Update the `pagerduty_escalation_policy.default` resource block in `providers/pagerduty/main.tf` to match the imported state (run `terraform show` after import to see current values)
-5. Apply:
+5. Apply PagerDuty:
    ```bash
    terraform apply
    ```
-6. Copy the integration key to the GCP project:
-   ```bash
-   terraform output integration_key
-   ```
-   Paste the value into `providers/gcp/projects/adits-gcp/terraform.tfvars`:
-   ```hcl
-   pagerduty_integration_key = "abc123..."
-   ```
-7. Apply the GCP project:
+6. Apply the GCP project — it reads the integration key automatically from PagerDuty state:
    ```bash
    cd providers/gcp/projects/adits-gcp
    terraform apply
@@ -121,4 +114,4 @@ The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. A
 
 ### Adding PagerDuty to another GCP project
 
-Pass `pagerduty_integration_key` in that project's `terraform.tfvars` — the same PagerDuty service handles all GCP projects.
+Point the new project's `main.tf` at the same `terraform_remote_state.pagerduty` data source — the same PagerDuty service handles all GCP projects.
