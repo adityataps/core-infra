@@ -72,3 +72,12 @@ If the billing account is already linked and IAM bindings exist, import them too
 3. Fill in a new `terraform.tfvars`
 4. `terraform init && terraform import module.baseline.google_project.this projects/<NEW_PROJECT_ID>`
 5. `terraform plan && terraform apply`
+
+## GitHub Actions Secrets
+
+Two repository secrets must be set in GitHub (Settings → Secrets and variables → Actions):
+
+- `GCP_WORKLOAD_IDENTITY_PROVIDER` — full WIF provider resource name, output from `terraform output workload_identity_provider` in the project dir
+- `GCP_SERVICE_ACCOUNT` — service account email, output from `terraform output github_actions_service_account_email`
+
+These are populated after the first `terraform apply` of the GCP baseline.
