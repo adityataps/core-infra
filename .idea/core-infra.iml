@@ -2,7 +2,12 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/bootstrap/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/modules/baseline/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/adits-gcp/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/pagerduty/.terraform" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
