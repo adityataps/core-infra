@@ -85,3 +85,10 @@ variable "enable_data_access_audit_logs" {
   description = "Enable DATA_READ and DATA_WRITE audit logs. Billable beyond 50 GiB/month free tier."
   default     = true
 }
+
+variable "pagerduty_integration_key" {
+  type        = string
+  description = "PagerDuty integration key for GCP monitoring alerts. Null disables PagerDuty routing."
+  default     = null
+  sensitive   = true
+}

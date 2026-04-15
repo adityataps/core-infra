@@ -24,3 +24,5 @@ enabled_apis = [
 ]
 
 # enable_data_access_audit_logs = true  # set to false to disable billable DATA_READ/WRITE audit logs
+
+# pagerduty_integration_key = "abc123..."  # output from providers/pagerduty: terraform output integration_key
