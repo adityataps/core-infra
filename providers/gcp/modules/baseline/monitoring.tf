@@ -4,26 +4,18 @@ resource "google_monitoring_alert_policy" "default" {
   combiner     = "OR"
   enabled      = false
 
+  # The GCP provider requires at least one conditions block. This stub condition
+  # is intentionally inert (equality check that never triggers). Replace with
+  # real conditions to activate monitoring, e.g. CPU or memory thresholds.
   conditions {
-    display_name = "Placeholder condition"
+    display_name = "Stub — replace with real condition"
     condition_threshold {
       filter          = "resource.type=\"global\""
       comparison      = "COMPARISON_EQ"
-      threshold_value = 1
+      threshold_value = 0
       duration        = "0s"
     }
   }
-
-  # Add additional alert conditions here as needed, e.g.:
-  # conditions {
-  #   display_name = "CPU utilization high"
-  #   condition_threshold {
-  #     filter          = "resource.type=\"gce_instance\""
-  #     comparison      = "COMPARISON_GT"
-  #     threshold_value = 0.9
-  #     duration        = "60s"
-  #   }
-  # }
 
   notification_channels = compact([
     google_monitoring_notification_channel.budget_email.id,
