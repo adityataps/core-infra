@@ -7,6 +7,9 @@
       <excludeFolder url="file://$MODULE_DIR$/providers/gcp/modules/baseline/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/adits-gcp/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/pagerduty/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/hetzner/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/mongodb/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/supabase/.terraform" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
