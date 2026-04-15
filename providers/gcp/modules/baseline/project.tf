@@ -7,7 +7,9 @@ resource "google_project" "this" {
   lifecycle {
     # Prevent accidental project deletion
     prevent_destroy = true
-    # Allow labels to be updated without replacing
+    # Ignore label drift from console edits. Note: this also means label changes
+    # in tfvars will have no effect after initial apply. To enforce label changes,
+    # remove ignore_changes, run terraform apply, then add it back.
     ignore_changes = [labels]
   }
 }
