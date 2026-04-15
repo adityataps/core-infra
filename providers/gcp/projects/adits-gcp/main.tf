@@ -29,4 +29,5 @@ module "baseline" {
   enabled_apis                  = var.enabled_apis
   github_repo                   = var.github_repo
   enable_data_access_audit_logs = var.enable_data_access_audit_logs
+  pagerduty_integration_key     = var.pagerduty_integration_key
 }

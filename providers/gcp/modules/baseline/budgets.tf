@@ -10,6 +10,17 @@ resource "google_monitoring_notification_channel" "budget_email" {
   depends_on = [google_project_service.apis]
 }
 
+resource "google_monitoring_notification_channel" "pagerduty" {
+  count        = var.pagerduty_integration_key != null ? 1 : 0
+  project      = google_project.this.project_id
+  display_name = "PagerDuty — ${var.project_id}"
+  type         = "pagerduty"
+  labels = {
+    service_key = var.pagerduty_integration_key
+  }
+  depends_on = [google_project_service.apis]
+}
+
 resource "google_billing_budget" "project" {
   billing_account = var.billing_account
   display_name    = "${var.project_id}-monthly-budget"
@@ -34,9 +45,12 @@ resource "google_billing_budget" "project" {
   }
 
   all_updates_rule {
-    monitoring_notification_channels = [
-      google_monitoring_notification_channel.budget_email.id
-    ]
+    monitoring_notification_channels = compact([
+      google_monitoring_notification_channel.budget_email.id,
+      length(google_monitoring_notification_channel.pagerduty) > 0
+      ? google_monitoring_notification_channel.pagerduty[0].id
+      : null
+    ])
     disable_default_iam_recipients = true
   }
 }

@@ -81,3 +81,44 @@ Two repository secrets must be set in GitHub (Settings → Secrets and variables
 - `GCP_SERVICE_ACCOUNT` — service account email, output from `terraform output github_actions_service_account_email`
 
 These are populated after the first `terraform apply` of the GCP baseline.
+
+## PagerDuty Integration
+
+The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. After making changes to PagerDuty resources, apply that root first, then copy the integration key to the GCP project tfvars and apply GCP.
+
+### First-time setup
+
+1. Get the existing escalation policy ID from PagerDuty (Settings → Escalation Policies → click the policy → copy the ID from the URL: `/escalation_policies/<ID>`)
+2. Fill in `providers/pagerduty/terraform.tfvars` (gitignored):
+   ```hcl
+   api_token   = "your-pagerduty-api-token"
+   admin_email = "you@example.com"
+   ```
+3. Initialize and import the existing escalation policy:
+   ```bash
+   cd providers/pagerduty
+   terraform init -backend-config="bucket=<YOUR_STATE_BUCKET_NAME>"
+   terraform import pagerduty_escalation_policy.default <ESCALATION_POLICY_ID>
+   ```
+4. Update the `pagerduty_escalation_policy.default` resource block in `providers/pagerduty/main.tf` to match the imported state (run `terraform show` after import to see current values)
+5. Apply:
+   ```bash
+   terraform apply
+   ```
+6. Copy the integration key to the GCP project:
+   ```bash
+   terraform output integration_key
+   ```
+   Paste the value into `providers/gcp/projects/adits-gcp/terraform.tfvars`:
+   ```hcl
+   pagerduty_integration_key = "abc123..."
+   ```
+7. Apply the GCP project:
+   ```bash
+   cd providers/gcp/projects/adits-gcp
+   terraform apply
+   ```
+
+### Adding PagerDuty to another GCP project
+
+Pass `pagerduty_integration_key` in that project's `terraform.tfvars` — the same PagerDuty service handles all GCP projects.

@@ -1,0 +1,3 @@
+api_token            = "your-pagerduty-api-token"
+escalation_policy_id = "PXXXXXX"
+admin_email          = "you@example.com"
