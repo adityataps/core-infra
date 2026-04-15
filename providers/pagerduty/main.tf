@@ -23,7 +23,7 @@ data "pagerduty_vendor" "gcp" {
 }
 
 resource "pagerduty_service" "gcp_monitoring" {
-  name                    = "GCP Monitoring (${var.gcp_project_id})"
+  name                    = "GCP Monitoring"
   escalation_policy       = pagerduty_escalation_policy.default.id
   auto_resolve_timeout    = 86400
   acknowledgement_timeout = 0
