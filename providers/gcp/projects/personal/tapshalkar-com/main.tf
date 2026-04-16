@@ -18,7 +18,7 @@ provider "google" {
 data "terraform_remote_state" "pagerduty" {
   backend = "gcs"
   config = {
-    bucket = "adits-gcp-core-infra-tfstate"
+    bucket = "tapshalkar-com-tfstate"
     prefix = "pagerduty"
   }
 }
@@ -26,7 +26,7 @@ data "terraform_remote_state" "pagerduty" {
 data "terraform_remote_state" "gcp_org" {
   backend = "gcs"
   config = {
-    bucket = "adits-gcp-core-infra-tfstate"
+    bucket = "tapshalkar-com-tfstate"
     prefix = "gcp/org"
   }
 }

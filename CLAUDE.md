@@ -69,7 +69,7 @@ If the billing account is already linked and IAM bindings exist, import them too
 
 ## Adding a New GCP Project
 
-1. `cp -r providers/gcp/projects/personal/adits-gcp providers/gcp/projects/<folder>/<new-name>`
+1. `cp -r providers/gcp/projects/personal/tapshalkar-com providers/gcp/projects/<folder>/<new-name>`
 2. Update `backend.tf` prefix to `gcp/projects/<folder>/<new-name>`
 3. Fill in a new `terraform.tfvars`
 4. `terraform init -backend-config="bucket=<YOUR_STATE_BUCKET_NAME>"`
@@ -111,7 +111,7 @@ The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. T
    ```
 6. Apply the GCP project — it reads the integration key automatically from PagerDuty state:
    ```bash
-   cd providers/gcp/projects/personal/adits-gcp
+   cd providers/gcp/projects/personal/tapshalkar-com
    terraform apply
    ```
 

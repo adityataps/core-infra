@@ -39,5 +39,5 @@ No modules.
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_integration_key"></a> [integration\_key](#output\_integration\_key) | PagerDuty routing key for the GCP Monitoring service integration. Paste into providers/gcp/projects/adits-gcp/terraform.tfvars as pagerduty\_integration\_key. |
+| <a name="output_integration_key"></a> [integration\_key](#output\_integration\_key) | PagerDuty routing key for the GCP Monitoring service integration. Consumed automatically via terraform\_remote\_state in providers/gcp/projects/personal/tapshalkar-com. |
 <!-- END_TF_DOCS -->
