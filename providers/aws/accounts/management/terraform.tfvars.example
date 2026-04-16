@@ -1,0 +1,14 @@
+aws_region = "us-east-1"
+
+# Monthly budget caps per linked account (USD).
+# Update these to match your expected spend per account.
+budget_amounts = {
+  personal     = 10
+  certs_1      = 5
+  certs_2      = 5
+  side_project = 10
+}
+
+budget_thresholds = [0.5, 0.9, 1.0]
+
+github_repo = "adityataps/core-infra"
