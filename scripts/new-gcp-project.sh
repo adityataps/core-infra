@@ -52,6 +52,26 @@ sed -i '' \
   "s|prefix = \"gcp/projects/management/tapshalkar-com\"|prefix = \"gcp/projects/$FOLDER/$PROJECT_ID\"|" \
   "$TARGET/backend.tf"
 
+# ── Patch provider billing_project ───────────────────────────────────────────
+# Non-management projects can't use themselves as billing_project during creation
+# (project doesn't exist yet). Use var.management_project_id instead.
+if [[ "$FOLDER" != "management" ]]; then
+  sed -i '' \
+    "s|billing_project       = var.project_id|billing_project       = var.management_project_id|" \
+    "$TARGET/main.tf"
+
+  # Inject management_project_id variable before project_id in variables.tf
+  sed -i '' \
+    '/^variable "project_id"/i\
+variable "management_project_id" {\
+  type        = string\
+  description = "Project ID of the management project, used as billing_project for API quota. Defaults to tapshalkar-com."\
+  default     = "tapshalkar-com"\
+}\
+' \
+    "$TARGET/variables.tf"
+fi
+
 # ── Patch main.tf folder_id output reference ──────────────────────────────────
 FOLDER_OUTPUT="${FOLDER}_folder_resource_name"
 sed -i '' \

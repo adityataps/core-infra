@@ -39,6 +39,7 @@
 | <a name="input_enabled_apis"></a> [enabled\_apis](#input\_enabled\_apis) | GCP APIs to enable | `list(string)` | <pre>[<br/>  "compute.googleapis.com",<br/>  "iam.googleapis.com",<br/>  "cloudbilling.googleapis.com",<br/>  "billingbudgets.googleapis.com",<br/>  "cloudresourcemanager.googleapis.com",<br/>  "logging.googleapis.com",<br/>  "monitoring.googleapis.com",<br/>  "iamcredentials.googleapis.com"<br/>]</pre> | no |
 | <a name="input_github_repo"></a> [github\_repo](#input\_github\_repo) | GitHub repo for WIF in 'owner/repo' format. Null skips WIF setup. | `string` | `null` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the project | `map(string)` | <pre>{<br/>  "env": "personal",<br/>  "managed-by": "terraform"<br/>}</pre> | no |
+| <a name="input_management_project_id"></a> [management\_project\_id](#input\_management\_project\_id) | Project ID of the management project, used as billing\_project for API quota. Defaults to tapshalkar-com. | `string` | `"tapshalkar-com"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP project ID | `string` | n/a | yes |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Human-readable display name for the GCP project | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Default GCP region | `string` | `"us-central1"` | no |

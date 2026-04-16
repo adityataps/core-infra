@@ -1,3 +1,9 @@
+variable "management_project_id" {
+  type        = string
+  description = "Project ID of the management project, used as billing_project for API quota. Defaults to tapshalkar-com."
+  default     = "tapshalkar-com"
+}
+
 variable "project_id" {
   type        = string
   description = "GCP project ID"
