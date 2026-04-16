@@ -111,7 +111,7 @@ The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. T
    ```
 6. Apply the GCP project — it reads the integration key automatically from PagerDuty state:
    ```bash
-   cd providers/gcp/projects/adits-gcp
+   cd providers/gcp/projects/personal/adits-gcp
    terraform apply
    ```
 
