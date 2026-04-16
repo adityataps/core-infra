@@ -61,7 +61,7 @@ Hooks run automatically on `git commit`: `terraform fmt`, `terraform validate`, 
 When applying the GCP baseline against an existing project for the first time, import the project resource:
 
 ```bash
-cd providers/gcp/projects/my-project
+cd providers/gcp/projects/<folder>/my-project
 terraform import module.baseline.google_project.this projects/<PROJECT_ID>
 ```
 
