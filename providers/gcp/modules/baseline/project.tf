@@ -2,6 +2,7 @@ resource "google_project" "this" {
   project_id      = var.project_id
   name            = var.project_name
   billing_account = var.billing_account
+  folder_id       = var.folder_id
   labels          = var.labels
 
   lifecycle {
