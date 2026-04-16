@@ -17,6 +17,11 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 
+# Allow non-sensitive tfvars to be committed
+!providers/gcp/org/terraform.tfvars
+!providers/gcp/projects/management/tapshalkar-com/terraform.tfvars
+!providers/gcp/projects/personal/*/terraform.tfvars
+
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
 override.tf

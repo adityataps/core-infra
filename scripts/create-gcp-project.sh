@@ -144,7 +144,6 @@ billing_account = "XXXXXX-XXXXXX-XXXXXX" # TODO: fill in billing account ID
 admin_user      = "$ADMIN_USER"
 region          = "us-central1"
 budget_amount   = 20
-github_repo     = "$GITHUB_REPO"
 
 labels = {
   env          = "$FOLDER"
@@ -159,7 +158,6 @@ project_name  = "$PROJECT_NAME"
 admin_user    = "$ADMIN_USER"
 region        = "us-central1"
 budget_amount = 20
-github_repo   = "$GITHUB_REPO"
 
 labels = {
   env          = "$FOLDER"

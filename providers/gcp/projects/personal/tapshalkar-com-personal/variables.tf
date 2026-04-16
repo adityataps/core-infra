@@ -68,7 +68,7 @@ variable "enabled_apis" {
 variable "github_repo" {
   type        = string
   description = "GitHub repo for WIF in 'owner/repo' format. Null skips WIF setup."
-  default     = null
+  default     = "adityataps/core-infra"
 
   validation {
     condition     = var.github_repo == null || can(regex("^[^/]+/[^/]+$", var.github_repo))
