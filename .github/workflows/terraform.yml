@@ -6,10 +6,6 @@ on:
     paths:
       - 'providers/**'
       - 'bootstrap/**'
-  push:
-    branches: [main]
-    paths:
-      - 'providers/**'
 
 jobs:
   terraform:
@@ -24,7 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         project:
-          - providers/gcp/projects/my-project
+          - providers/pagerduty
+          - providers/gcp/org
+          - providers/gcp/projects/management/tapshalkar-com
+          - providers/gcp/projects/personal/tapshalkar-com-sandbox
+          - providers/gcp/projects/personal/tapshalkar-com-personal
 
     steps:
       - name: Checkout
@@ -43,7 +43,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: ${{ matrix.project }}
-        run: terraform init -reconfigure
+        run: terraform init -backend-config="bucket=tapshalkar-com-tfstate" -reconfigure
 
       - name: Terraform Format Check
         working-directory: ${{ matrix.project }}
@@ -55,7 +55,6 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
         working-directory: ${{ matrix.project }}
         run: |
           terraform plan -no-color -input=false 2>&1 | tee plan_output.txt
@@ -65,7 +64,6 @@ jobs:
         continue-on-error: true
 
       - name: Post Plan Comment
-        if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
@@ -101,8 +99,3 @@ jobs:
               repo: context.repo.repo,
               body
             });
-
-      - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        working-directory: ${{ matrix.project }}
-        run: terraform apply -auto-approve -input=false
