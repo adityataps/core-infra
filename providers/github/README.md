@@ -23,9 +23,20 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
+| [github_actions_secret.aws_certs_1_role_arn](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
+| [github_actions_secret.aws_certs_2_role_arn](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
+| [github_actions_secret.aws_management_role_arn](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
+| [github_actions_secret.aws_personal_role_arn](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
+| [github_actions_secret.aws_side_project_role_arn](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
 | [github_actions_secret.gcp_service_account](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
 | [github_actions_secret.gcp_wif_provider](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
+| [github_actions_variable.aws_region](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_variable) | resource |
 | [github_repository.core_infra](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/repository) | data source |
+| [terraform_remote_state.aws_certs_1](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.aws_certs_2](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.aws_management](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.aws_personal](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.aws_side_project](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.management](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
@@ -39,5 +50,6 @@ No modules.
 
 | Name | Description |
 | ---- | ----------- |
+| <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | Default AWS region used across all AWS accounts |
 | <a name="output_core_infra_repo_full_name"></a> [core\_infra\_repo\_full\_name](#output\_core\_infra\_repo\_full\_name) | Full name of the core-infra repository (owner/repo). Consumed by project roots via terraform\_remote\_state to set github\_repo. |
 <!-- END_TF_DOCS -->
