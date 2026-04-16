@@ -39,8 +39,10 @@ terraform destroy
 ## Structure
 
 - `bootstrap/` — creates the GCS remote state bucket (run once, local state).
+- `providers/gcp/org/` — GCP organization root: `personal/` and `certs/` folders + org IAM. Apply before projects.
 - `providers/gcp/modules/baseline/` — reusable module configuring GCP project defaults.
-- `providers/gcp/projects/<name>/` — per-project instantiation of the baseline module.
+- `providers/gcp/projects/<folder>/<name>/` — per-project instantiation of the baseline module, grouped by folder (`personal/`, `certs/`).
+- `providers/pagerduty/` — PagerDuty service + integration. Apply before GCP projects.
 - `providers/aws/` — AWS infrastructure (future, same pattern).
 - `scripts/` — helper scripts for import, init, etc.
 
@@ -67,11 +69,12 @@ If the billing account is already linked and IAM bindings exist, import them too
 
 ## Adding a New GCP Project
 
-1. `cp -r providers/gcp/projects/my-project providers/gcp/projects/<new-name>`
-2. Update `backend.tf` prefix to `gcp/<new-name>`
+1. `cp -r providers/gcp/projects/personal/adits-gcp providers/gcp/projects/<folder>/<new-name>`
+2. Update `backend.tf` prefix to `gcp/projects/<folder>/<new-name>`
 3. Fill in a new `terraform.tfvars`
-4. `terraform init && terraform import module.baseline.google_project.this projects/<NEW_PROJECT_ID>`
-5. `terraform plan && terraform apply`
+4. `terraform init -backend-config="bucket=<YOUR_STATE_BUCKET_NAME>"`
+5. `terraform import module.baseline.google_project.this projects/<NEW_PROJECT_ID>`
+6. `terraform plan && terraform apply`
 
 ## GitHub Actions Secrets
 
