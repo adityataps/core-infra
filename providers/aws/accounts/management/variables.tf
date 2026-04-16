@@ -17,6 +17,11 @@ variable "budget_amounts" {
     certs_2      = 5
     side_project = 10
   }
+
+  validation {
+    condition     = alltrue([for k in ["personal", "certs_1", "certs_2", "side_project"] : contains(keys(var.budget_amounts), k)])
+    error_message = "budget_amounts must contain keys: personal, certs_1, certs_2, side_project."
+  }
 }
 
 variable "budget_thresholds" {
