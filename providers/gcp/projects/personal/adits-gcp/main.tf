@@ -23,6 +23,14 @@ data "terraform_remote_state" "pagerduty" {
   }
 }
 
+data "terraform_remote_state" "gcp_org" {
+  backend = "gcs"
+  config = {
+    bucket = "adits-gcp-core-infra-tfstate"
+    prefix = "gcp/org"
+  }
+}
+
 module "baseline" {
   source = "../../../modules/baseline"
 
@@ -38,4 +46,5 @@ module "baseline" {
   github_repo                   = var.github_repo
   enable_data_access_audit_logs = var.enable_data_access_audit_logs
   pagerduty_integration_key     = data.terraform_remote_state.pagerduty.outputs.integration_key
+  folder_id                     = data.terraform_remote_state.gcp_org.outputs.personal_folder_resource_name
 }
