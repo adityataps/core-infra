@@ -36,7 +36,7 @@ module "baseline" {
 
   project_id                    = var.project_id
   project_name                  = var.project_name
-  billing_account               = var.billing_account
+  billing_account               = data.terraform_remote_state.gcp_org.outputs.billing_account_id
   admin_user                    = var.admin_user
   region                        = var.region
   budget_amount                 = var.budget_amount

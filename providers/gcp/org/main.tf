@@ -2,6 +2,10 @@ data "google_organization" "this" {
   domain = var.domain
 }
 
+data "google_billing_account" "this" {
+  open = true
+}
+
 resource "google_folder" "management" {
   display_name = "management"
   parent       = data.google_organization.this.name

@@ -1,3 +1,8 @@
+output "billing_account_id" {
+  description = "Billing account ID (format: XXXXXX-XXXXXX-XXXXXX) for use in project roots."
+  value       = data.google_billing_account.this.id
+}
+
 output "org_id" {
   description = "GCP organization ID"
   value       = data.google_organization.this.org_id
