@@ -24,7 +24,7 @@ data "terraform_remote_state" "pagerduty" {
 }
 
 module "baseline" {
-  source = "../../modules/baseline"
+  source = "../../../modules/baseline"
 
   project_id                    = var.project_id
   project_name                  = var.project_name

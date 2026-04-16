@@ -18,7 +18,7 @@
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_baseline"></a> [baseline](#module\_baseline) | ../../modules/baseline | n/a |
+| <a name="module_baseline"></a> [baseline](#module\_baseline) | ../../../modules/baseline | n/a |
 
 ## Resources
 
