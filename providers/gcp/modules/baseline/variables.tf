@@ -106,4 +106,9 @@ variable "folder_id" {
   type        = string
   description = "GCP folder to place this project under (e.g. folders/1234567890). Null places the project directly under the organization."
   default     = null
+
+  validation {
+    condition     = var.folder_id == null || can(regex("^folders/[0-9]+$", var.folder_id))
+    error_message = "folder_id must be in the format 'folders/<numeric-id>' (e.g. folders/1234567890)."
+  }
 }
