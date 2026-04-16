@@ -7,6 +7,12 @@
       <excludeFolder url="file://$MODULE_DIR$/providers/gcp/modules/baseline/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/adits-gcp/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/pagerduty/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/org/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/management/tapshalkar-com/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/adits-gcp/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/tapshalkar-com-personal/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/tapshalkar-com-sandbox/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/tapshalkar-com/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/hetzner/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/mongodb/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/supabase/.terraform" />
