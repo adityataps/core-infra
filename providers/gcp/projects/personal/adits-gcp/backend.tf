@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "adits-gcp-core-infra-tfstate"
+    # bucket is set via -backend-config or backend.hcl (gitignored)
     prefix = "gcp/projects/personal/adits-gcp"
   }
 }
