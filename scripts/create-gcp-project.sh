@@ -67,6 +67,51 @@ sed -i '' \
   "s|outputs\.management_folder_resource_name|outputs.$FOLDER_OUTPUT|" \
   "$TARGET/main.tf"
 
+# ── All-folder patches: add github remote state + wire github_repo ────────────
+python3 - "$TARGET/main.tf" "$STATE_BUCKET" <<'PYEOF'
+import sys, re
+
+path, state_bucket = sys.argv[1], sys.argv[2]
+content = open(path).read()
+
+if 'data "terraform_remote_state" "github"' not in content:
+    github_block = f'''
+data "terraform_remote_state" "github" {{
+  backend = "gcs"
+  config = {{
+    bucket = "{state_bucket}"
+    prefix = "github"
+  }}
+}}'''
+    content = re.sub(
+        r'(data "terraform_remote_state" "gcp_org" \{.*?\n\})\n',
+        r'\1\n' + github_block + '\n',
+        content,
+        flags=re.DOTALL
+    )
+
+content = content.replace(
+    'github_repo                   = var.github_repo',
+    'github_repo                   = data.terraform_remote_state.github.outputs.core_infra_repo_full_name'
+)
+open(path, 'w').write(content)
+PYEOF
+
+# Also remove github_repo from variables.tf for all folders
+python3 - "$TARGET/variables.tf" <<'PYEOF'
+import sys, re
+
+path = sys.argv[1]
+content = open(path).read()
+content = re.sub(
+    r'variable "github_repo" \{.*?\n\}\n\n',
+    '',
+    content,
+    flags=re.DOTALL
+)
+open(path, 'w').write(content)
+PYEOF
+
 # ── Non-management patches (Python for reliable multiline editing) ────────────
 if [[ "$FOLDER" != "management" ]]; then
   python3 - "$TARGET/main.tf" "$STATE_BUCKET" "$MANAGEMENT_PROJECT_ID" <<'PYEOF'
@@ -87,8 +132,9 @@ content = content.replace(
     'billing_account               = data.terraform_remote_state.management.outputs.billing_account_id'
 )
 
-# 3. Append management remote state block after the closing } of gcp_org block
-mgmt_block = f'''
+# 3. Append management remote state block after github block (if not already present)
+if 'data "terraform_remote_state" "management"' not in content:
+    mgmt_block = f'''
 data "terraform_remote_state" "management" {{
   backend = "gcs"
   config = {{
@@ -96,12 +142,12 @@ data "terraform_remote_state" "management" {{
     prefix = "gcp/projects/management/{mgmt_project}"
   }}
 }}'''
-content = re.sub(
-    r'(data "terraform_remote_state" "gcp_org" \{.*?\n\})\n',
-    r'\1\n' + mgmt_block + '\n',
-    content,
-    flags=re.DOTALL
-)
+    content = re.sub(
+        r'(data "terraform_remote_state" "github" \{.*?\n\})\n',
+        r'\1\n' + mgmt_block + '\n',
+        content,
+        flags=re.DOTALL
+    )
 
 open(path, 'w').write(content)
 PYEOF
@@ -112,14 +158,15 @@ import sys, re
 path, mgmt_project = sys.argv[1], sys.argv[2]
 content = open(path).read()
 
-# 1. Remove billing_account variable block
+# 1. Remove billing_account and github_repo variable blocks
 # Outer } is unindented (\n}\n\n), inner validation } is indented (\n  })
-content = re.sub(
-    r'variable "billing_account" \{.*?\n\}\n\n',
-    '',
-    content,
-    flags=re.DOTALL
-)
+for var_name in ('billing_account', 'github_repo'):
+    content = re.sub(
+        rf'variable "{var_name}" \{{.*?\n\}}\n\n',
+        '',
+        content,
+        flags=re.DOTALL
+    )
 
 # 2. Prepend management_project_id variable
 mgmt_var = f'''variable "management_project_id" {{

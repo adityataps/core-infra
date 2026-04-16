@@ -65,17 +65,6 @@ variable "enabled_apis" {
   ]
 }
 
-variable "github_repo" {
-  type        = string
-  description = "GitHub repo for WIF in 'owner/repo' format. Null skips WIF setup."
-  default     = "adityataps/core-infra"
-
-  validation {
-    condition     = var.github_repo == null || can(regex("^[^/]+/[^/]+$", var.github_repo))
-    error_message = "github_repo must be in 'owner/repo' format (e.g. 'my-org/my-repo')."
-  }
-}
-
 variable "enable_data_access_audit_logs" {
   type        = bool
   description = "Enable DATA_READ and DATA_WRITE audit logs. Billable beyond 50 GiB/month free tier."
