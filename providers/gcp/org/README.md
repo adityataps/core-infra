@@ -23,6 +23,7 @@ No modules.
 | Name | Type |
 | ---- | ---- |
 | [google_folder.certs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder) | resource |
+| [google_folder.management](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder) | resource |
 | [google_folder.personal](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder) | resource |
 | [google_organization_iam_member.admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
 | [google_organization.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/organization) | data source |
@@ -39,6 +40,7 @@ No modules.
 | Name | Description |
 | ---- | ----------- |
 | <a name="output_certs_folder_resource_name"></a> [certs\_folder\_resource\_name](#output\_certs\_folder\_resource\_name) | Resource name of the certs/ folder (format: folders/<ID>). Use as folder\_id in google\_project. |
+| <a name="output_management_folder_resource_name"></a> [management\_folder\_resource\_name](#output\_management\_folder\_resource\_name) | Resource name of the management/ folder (format: folders/<ID>). Use as folder\_id in google\_project. |
 | <a name="output_org_id"></a> [org\_id](#output\_org\_id) | GCP organization ID |
 | <a name="output_personal_folder_resource_name"></a> [personal\_folder\_resource\_name](#output\_personal\_folder\_resource\_name) | Resource name of the personal/ folder (format: folders/<ID>). Use as folder\_id in google\_project. |
 <!-- END_TF_DOCS -->

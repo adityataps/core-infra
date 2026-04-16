@@ -39,8 +39,9 @@ terraform destroy
 ## Structure
 
 - `bootstrap/` — creates the GCS remote state bucket (run once, local state).
-- `providers/gcp/org/` — GCP organization root: `personal/` and `certs/` folders + org IAM. Apply before projects.
+- `providers/gcp/org/` — GCP organization root: `management/`, `personal/`, and `certs/` folders + org IAM. Apply before projects.
 - `providers/gcp/modules/baseline/` — reusable module configuring GCP project defaults.
+- `providers/gcp/projects/management/` — management/infra projects (TF state, WIF, billing). `tapshalkar-com` lives here.
 - `providers/gcp/projects/<folder>/<name>/` — per-project instantiation of the baseline module, grouped by folder (`personal/`, `certs/`).
 - `providers/pagerduty/` — PagerDuty service + integration. Apply before GCP projects.
 - `providers/aws/` — AWS infrastructure (future, same pattern).
@@ -69,7 +70,7 @@ If the billing account is already linked and IAM bindings exist, import them too
 
 ## Adding a New GCP Project
 
-1. `cp -r providers/gcp/projects/personal/tapshalkar-com providers/gcp/projects/<folder>/<new-name>`
+1. `cp -r providers/gcp/projects/management/tapshalkar-com providers/gcp/projects/<folder>/<new-name>`
 2. Update `backend.tf` prefix to `gcp/projects/<folder>/<new-name>`
 3. Fill in a new `terraform.tfvars`
 4. `terraform init -backend-config="bucket=<YOUR_STATE_BUCKET_NAME>"`
@@ -111,7 +112,7 @@ The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. T
    ```
 6. Apply the GCP project — it reads the integration key automatically from PagerDuty state:
    ```bash
-   cd providers/gcp/projects/personal/tapshalkar-com
+   cd providers/gcp/projects/management/tapshalkar-com
    terraform apply
    ```
 

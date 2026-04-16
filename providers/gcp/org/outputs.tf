@@ -3,6 +3,11 @@ output "org_id" {
   value       = data.google_organization.this.org_id
 }
 
+output "management_folder_resource_name" {
+  description = "Resource name of the management/ folder (format: folders/<ID>). Use as folder_id in google_project."
+  value       = google_folder.management.name
+}
+
 output "personal_folder_resource_name" {
   description = "Resource name of the personal/ folder (format: folders/<ID>). Use as folder_id in google_project."
   value       = google_folder.personal.name
