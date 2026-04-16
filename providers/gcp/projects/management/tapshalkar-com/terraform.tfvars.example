@@ -1,6 +1,7 @@
-project_id   = "your-gcp-project-id"
-project_name = "My GCP Project"
-admin_user   = "you@gmail.com"
+project_id      = "your-gcp-project-id"
+project_name    = "My GCP Project"
+billing_account = "XXXXXX-XXXXXX-XXXXXX"
+admin_user      = "you@gmail.com"
 region          = "us-central1"
 budget_amount   = 20
 budget_thresholds = [0.5, 0.9, 1.0]

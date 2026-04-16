@@ -31,12 +31,20 @@ data "terraform_remote_state" "gcp_org" {
   }
 }
 
+data "terraform_remote_state" "management" {
+  backend = "gcs"
+  config = {
+    bucket = "tapshalkar-com-tfstate"
+    prefix = "gcp/projects/management/tapshalkar-com"
+  }
+}
+
 module "baseline" {
   source = "../../../modules/baseline"
 
   project_id                    = var.project_id
   project_name                  = var.project_name
-  billing_account               = data.terraform_remote_state.gcp_org.outputs.billing_account_id
+  billing_account               = data.terraform_remote_state.management.outputs.billing_account_id
   admin_user                    = var.admin_user
   region                        = var.region
   budget_amount                 = var.budget_amount

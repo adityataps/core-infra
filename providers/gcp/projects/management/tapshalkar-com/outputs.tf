@@ -1,3 +1,8 @@
+output "billing_account_id" {
+  description = "Billing account ID used by this org. Consumed by other project roots via terraform_remote_state."
+  value       = var.billing_account
+}
+
 output "project_id" {
   description = "The GCP project ID"
   value       = module.baseline.project_id

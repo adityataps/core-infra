@@ -32,6 +32,7 @@
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_admin_user"></a> [admin\_user](#input\_admin\_user) | Google account email to bind as project owner | `string` | n/a | yes |
+| <a name="input_billing_account"></a> [billing\_account](#input\_billing\_account) | Billing account ID to associate with all projects in this org (format: XXXXXX-XXXXXX-XXXXXX) | `string` | n/a | yes |
 | <a name="input_budget_amount"></a> [budget\_amount](#input\_budget\_amount) | Monthly budget cap in USD | `number` | n/a | yes |
 | <a name="input_budget_thresholds"></a> [budget\_thresholds](#input\_budget\_thresholds) | Fractional spend thresholds for budget alerts | `list(number)` | <pre>[<br/>  0.5,<br/>  0.9,<br/>  1<br/>]</pre> | no |
 | <a name="input_enable_data_access_audit_logs"></a> [enable\_data\_access\_audit\_logs](#input\_enable\_data\_access\_audit\_logs) | Enable DATA\_READ and DATA\_WRITE audit logs. Billable beyond 50 GiB/month free tier. | `bool` | `true` | no |
@@ -46,6 +47,7 @@
 
 | Name | Description |
 | ---- | ----------- |
+| <a name="output_billing_account_id"></a> [billing\_account\_id](#output\_billing\_account\_id) | Billing account ID used by this org. Consumed by other project roots via terraform\_remote\_state. |
 | <a name="output_github_actions_service_account_email"></a> [github\_actions\_service\_account\_email](#output\_github\_actions\_service\_account\_email) | Email of the GitHub Actions service account (set as GCP\_SERVICE\_ACCOUNT GitHub secret) |
 | <a name="output_project_id"></a> [project\_id](#output\_project\_id) | The GCP project ID |
 | <a name="output_project_number"></a> [project\_number](#output\_project\_number) | The GCP project number |

@@ -8,6 +8,16 @@ variable "project_name" {
   description = "Human-readable display name for the GCP project"
 }
 
+variable "billing_account" {
+  type        = string
+  description = "Billing account ID to associate with all projects in this org (format: XXXXXX-XXXXXX-XXXXXX)"
+
+  validation {
+    condition     = can(regex("^[0-9A-Fa-f]{6}-[0-9A-Fa-f]{6}-[0-9A-Fa-f]{6}$", var.billing_account))
+    error_message = "billing_account must be in the format XXXXXX-XXXXXX-XXXXXX (hex characters)."
+  }
+}
+
 variable "admin_user" {
   type        = string
   description = "Google account email to bind as project owner"
