@@ -7,17 +7,20 @@
 #   • Wires the account into management centralized budgets
 #   • Extends providers/github/ with a new OIDC role ARN secret
 #
-# <ou>           OU to place the account in: certs | projects | personal
+# <ou>           OU to place the account in: certs | projects | personal | management
 # <account-name> Slug for the account (lowercase, hyphens OK — e.g. "certs-3")
+#
+# The "management" OU is created automatically in org/main.tf on first use.
 #
 # Example:
 #   ./scripts/create-aws-account.sh projects my-new-project
 #   ./scripts/create-aws-account.sh certs certs-3
+#   ./scripts/create-aws-account.sh management security-audit
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VALID_OUS=("certs" "projects" "personal")
+VALID_OUS=("certs" "projects" "personal" "management")
 STATE_BUCKET="tapshalkar-com-tfstate"
 
 # ── Validate args ──────────────────────────────────────────────────────────────
@@ -44,12 +47,61 @@ if [[ ! "$ACCOUNT_NAME" =~ ^[a-z][a-z0-9-]*$ ]]; then
   exit 1
 fi
 
-# Validate the OU resource exists in org/main.tf before proceeding
+# Ensure the OU resource exists in org/main.tf — create it automatically if missing.
+# This is the normal path for "management" (not yet in org) and a safety check for others.
 ORG_MAIN="$REPO_ROOT/providers/aws/org/main.tf"
+ORG_OUTPUTS="$REPO_ROOT/providers/aws/org/outputs.tf"
+
 if ! grep -q "organizational_unit.*\"$OU\"" "$ORG_MAIN"; then
-  echo "Error: OU '$OU' not found in providers/aws/org/main.tf"
-  echo "Add the OU resource first or choose from existing OUs: ${VALID_OUS[*]}"
-  exit 1
+  echo "OU '$OU' not found in org/main.tf — creating it now..."
+  python3 - "$ORG_MAIN" "$OU" <<'PYEOF'
+import sys, re
+
+path, ou = sys.argv[1], sys.argv[2]
+content = open(path).read()
+
+new_ou_block = f'''
+resource "aws_organizations_organizational_unit" "{ou}" {{
+  name      = "{ou}"
+  parent_id = data.aws_organizations_organization.this.roots[0].id
+}}
+'''
+
+# Insert before the first aws_organizations_account resource to keep OUs grouped
+match = re.search(r'\nresource "aws_organizations_account"', content)
+if match:
+    content = content[:match.start()] + '\n' + new_ou_block + content[match.start():]
+else:
+    content = content.rstrip('\n') + '\n' + new_ou_block
+
+open(path, 'w').write(content)
+print(f"  ✓ Added aws_organizations_organizational_unit.{ou} to org/main.tf")
+PYEOF
+
+  # Also add the OU ID output to org/outputs.tf (after the last existing OU output)
+  python3 - "$ORG_OUTPUTS" "$OU" <<'PYEOF'
+import sys, re
+
+path, ou = sys.argv[1], sys.argv[2]
+content = open(path).read()
+
+new_ou_output = f'''
+output "{ou}_ou_id" {{
+  description = "ID of the {ou}/ OU"
+  value       = aws_organizations_organizational_unit.{ou}.id
+}}
+'''
+
+if f'output "{ou}_ou_id"' not in content:
+    # Insert after the last _ou_id output, before the first _account_id output
+    match = re.search(r'\noutput "\w+_account_id"', content)
+    if match:
+        content = content[:match.start()] + '\n' + new_ou_output + content[match.start():]
+    else:
+        content = content.rstrip('\n') + '\n' + new_ou_output
+    open(path, 'w').write(content)
+    print(f"  ✓ Added {ou}_ou_id output to org/outputs.tf")
+PYEOF
 fi
 
 # Prevent overwriting
@@ -209,8 +261,6 @@ else:
 PYEOF
 
 # ── 4. Patch providers/aws/org/outputs.tf ─────────────────────────────────────
-ORG_OUTPUTS="$REPO_ROOT/providers/aws/org/outputs.tf"
-
 python3 - "$ORG_OUTPUTS" "$RESOURCE_NAME" "$ACCOUNT_NAME" <<'PYEOF'
 import sys
 
