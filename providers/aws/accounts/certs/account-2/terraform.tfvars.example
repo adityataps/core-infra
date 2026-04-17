@@ -1,3 +1,0 @@
-# Get account_id from: cd providers/aws/org && terraform output certs_account_2_id
-account_id = "123456789012"
-region     = "us-east-1"
