@@ -1,0 +1,120 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(github-actions)"
+
+  - package-ecosystem: "terraform"
+    directory: "/bootstrap"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(bootstrap)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/pagerduty"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(pagerduty)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/gcp/org"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(gcp/org)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/gcp/modules/baseline"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(gcp/modules/baseline)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/gcp/projects/management/tapshalkar-com"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(gcp/projects/management)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/gcp/projects/personal/tapshalkar-com-personal"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(gcp/projects/personal)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/gcp/projects/personal/tapshalkar-com-sandbox"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(gcp/projects/sandbox)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/aws/org"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(aws/org)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/aws/modules/baseline"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(aws/modules/baseline)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/aws/accounts/management/tapshalkar-com"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(aws/accounts/management)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/aws/accounts/personal/tapshalkar-com-personal"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(aws/accounts/personal)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/aws/accounts/personal/tapshalkar-com-sandbox"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(aws/accounts/sandbox)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/aws/accounts/certs/tapshalkar-com-certs"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(aws/accounts/certs)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/hetzner"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(hetzner)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/mongodb"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(mongodb)"
+
+  - package-ecosystem: "terraform"
+    directory: "/providers/supabase"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(supabase)"
