@@ -29,6 +29,17 @@ resource "aws_sns_topic_subscription" "email" {
   endpoint  = var.notification_email
 }
 
+resource "aws_sns_topic_subscription" "pagerduty" {
+  count     = var.pagerduty_integration_key != "" ? 1 : 0
+  topic_arn = aws_sns_topic.budget_alerts.arn
+  protocol  = "https"
+  endpoint  = "https://events.pagerduty.com/integration/${var.pagerduty_integration_key}/enqueue"
+
+  # PagerDuty's service integration endpoint (/integration/<key>/enqueue) handles SNS
+  # SubscriptionConfirmation automatically — no manual confirmation step required.
+  endpoint_auto_confirms = true
+}
+
 resource "aws_budgets_budget" "this" {
   name              = "${var.account_name}-monthly"
   budget_type       = "COST"

@@ -1,5 +1,9 @@
 resource "aws_organizations_organization" "this" {
   feature_set = "ALL"
+
+  aws_service_access_principals = [
+    "sso.amazonaws.com",
+  ]
 }
 
 resource "aws_organizations_organizational_unit" "personal" {

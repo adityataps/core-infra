@@ -23,9 +23,12 @@ No modules.
 | Name | Type |
 | ---- | ---- |
 | [pagerduty_escalation_policy.default](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/resources/escalation_policy) | resource |
+| [pagerduty_service.aws_billing](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/resources/service) | resource |
 | [pagerduty_service.gcp_monitoring](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/resources/service) | resource |
+| [pagerduty_service_integration.aws_cloudwatch](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/resources/service_integration) | resource |
 | [pagerduty_service_integration.gcp](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/resources/service_integration) | resource |
 | [pagerduty_user.admin](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/data-sources/user) | data source |
+| [pagerduty_vendor.cloudwatch](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/data-sources/vendor) | data source |
 | [pagerduty_vendor.gcp](https://registry.terraform.io/providers/pagerduty/pagerduty/latest/docs/data-sources/vendor) | data source |
 
 ## Inputs
@@ -39,5 +42,6 @@ No modules.
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_integration_key"></a> [integration\_key](#output\_integration\_key) | PagerDuty routing key for the GCP Monitoring service integration. Consumed automatically via terraform\_remote\_state in providers/gcp/projects/personal/tapshalkar-com. |
+| <a name="output_aws_integration_key"></a> [aws\_integration\_key](#output\_aws\_integration\_key) | PagerDuty Amazon CloudWatch service integration key. Used as the SNS HTTPS endpoint via https://events.pagerduty.com/integration/<key>/enqueue — this endpoint handles SNS SubscriptionConfirmation automatically. |
+| <a name="output_gcp_integration_key"></a> [gcp\_integration\_key](#output\_gcp\_integration\_key) | PagerDuty routing key for the GCP Monitoring service integration. Consumed automatically via terraform\_remote\_state in GCP project roots. |
 <!-- END_TF_DOCS -->

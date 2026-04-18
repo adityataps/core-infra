@@ -30,3 +30,9 @@ variable "notification_email" {
   type        = string
   description = "Email address for budget alert SNS subscription"
 }
+
+variable "pagerduty_integration_key" {
+  type        = string
+  description = "PagerDuty Amazon CloudWatch service integration key. When set, an SNS HTTPS subscription is created to forward budget alerts to PagerDuty via the /integration/<key>/enqueue endpoint, which handles SNS SubscriptionConfirmation automatically."
+  default     = ""
+}

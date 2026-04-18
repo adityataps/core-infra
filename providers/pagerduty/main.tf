@@ -35,3 +35,21 @@ resource "pagerduty_service_integration" "gcp" {
   service = pagerduty_service.gcp_monitoring.id
   vendor  = data.pagerduty_vendor.gcp.id
 }
+
+data "pagerduty_vendor" "cloudwatch" {
+  name = "Amazon CloudWatch"
+}
+
+resource "pagerduty_service" "aws_billing" {
+  name                    = "AWS Monitoring"
+  escalation_policy       = pagerduty_escalation_policy.default.id
+  auto_resolve_timeout    = 86400
+  acknowledgement_timeout = 0
+  alert_creation          = "create_alerts_and_incidents"
+}
+
+resource "pagerduty_service_integration" "aws_cloudwatch" {
+  name    = data.pagerduty_vendor.cloudwatch.name
+  service = pagerduty_service.aws_billing.id
+  vendor  = data.pagerduty_vendor.cloudwatch.id
+}

@@ -1,17 +1,1 @@
 aws_region = "us-east-1"
-
-# Existing accounts — name and email must exactly match what's in the AWS console.
-# Find these in: AWS Console → Organizations → Accounts
-certs_1_account_name  = "my-certs-1"
-certs_1_account_email = "aws+certs-1@example.com"
-
-certs_2_account_name  = "my-certs-2"
-certs_2_account_email = "aws+certs-2@example.com"
-
-side_project_account_name  = "my-side-project"
-side_project_account_email = "aws+side-project@example.com"
-
-# New personal member account — this email must never have been registered with AWS before.
-# Using email aliasing (e.g., root+aws-personal@yourdomain.com) is recommended.
-personal_account_name  = "personal"
-personal_account_email = "aws+personal@example.com"
