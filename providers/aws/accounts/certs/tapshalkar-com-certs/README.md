@@ -12,6 +12,7 @@
 
 | Name | Version |
 | ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
@@ -24,17 +25,20 @@
 
 | Name | Type |
 | ---- | ---- |
+| [aws_organizations_account.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account) | resource |
 | [terraform_remote_state.github](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.management](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.org](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.pagerduty](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_account_id"></a> [account\_id](#input\_account\_id) | AWS account ID of the tapshalkar-com-certs account (used for assume\_role in versions.tf) | `string` | n/a | yes |
+| <a name="input_account_email"></a> [account\_email](#input\_account\_email) | Root email address for the tapshalkar-com-certs AWS account | `string` | n/a | yes |
 | <a name="input_budget_amount"></a> [budget\_amount](#input\_budget\_amount) | Monthly budget cap in USD for this account | `number` | `10` | no |
 | <a name="input_budget_thresholds"></a> [budget\_thresholds](#input\_budget\_thresholds) | Fractional spend thresholds triggering SNS alerts (e.g. [0.5, 0.9, 1.0]) | `list(number)` | <pre>[<br/>  0.5,<br/>  0.9,<br/>  1<br/>]</pre> | no |
-| <a name="input_notification_email"></a> [notification\_email](#input\_notification\_email) | Email address for budget alert SNS subscription | `string` | n/a | yes |
+| <a name="input_notification_email"></a> [notification\_email](#input\_notification\_email) | Email address for budget alert SNS subscription. Defaults to the management account's notification\_email if not set. | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region for this account | `string` | `"us-east-1"` | no |
 
 ## Outputs

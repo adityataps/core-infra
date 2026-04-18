@@ -42,4 +42,5 @@
 | ---- | ----------- |
 | <a name="output_account_id"></a> [account\_id](#output\_account\_id) | AWS account ID of the management account |
 | <a name="output_github_actions_role_arn"></a> [github\_actions\_role\_arn](#output\_github\_actions\_role\_arn) | ARN of the IAM role for GitHub Actions OIDC authentication (management account) |
+| <a name="output_notification_email"></a> [notification\_email](#output\_notification\_email) | Email address used for budget alert SNS subscriptions — shared as the default across all accounts |
 <!-- END_TF_DOCS -->
