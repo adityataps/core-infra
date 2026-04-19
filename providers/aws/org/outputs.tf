@@ -22,3 +22,18 @@ output "management_ou_id" {
   description = "ID of the management/ OU"
   value       = aws_organizations_organizational_unit.management.id
 }
+
+output "sso_instance_arn" {
+  description = "ARN of the IAM Identity Center instance"
+  value       = local.sso_instance_arn
+}
+
+output "identity_store_id" {
+  description = "ID of the IAM Identity Center identity store"
+  value       = local.identity_store_id
+}
+
+output "admin_user_id" {
+  description = "Identity Center user ID for aditya@tapshalkar.com"
+  value       = aws_identitystore_user.aditya.user_id
+}
