@@ -1,13 +1,3 @@
-terraform {
-  required_version = ">= 1.5"
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
-  }
-}
-
 provider "github" {
   owner = var.github_owner
   token = var.github_token
@@ -55,31 +45,23 @@ data "terraform_remote_state" "aws_personal" {
   backend = "gcs"
   config = {
     bucket = "tapshalkar-com-tfstate"
-    prefix = "aws/accounts/personal"
+    prefix = "aws/accounts/personal/tapshalkar-com-personal"
   }
 }
 
-data "terraform_remote_state" "aws_certs_1" {
+data "terraform_remote_state" "aws_sandbox" {
   backend = "gcs"
   config = {
     bucket = "tapshalkar-com-tfstate"
-    prefix = "aws/accounts/certs/account-1"
+    prefix = "aws/accounts/personal/tapshalkar-com-sandbox"
   }
 }
 
-data "terraform_remote_state" "aws_certs_2" {
+data "terraform_remote_state" "aws_certs" {
   backend = "gcs"
   config = {
     bucket = "tapshalkar-com-tfstate"
-    prefix = "aws/accounts/certs/account-2"
-  }
-}
-
-data "terraform_remote_state" "aws_side_project" {
-  backend = "gcs"
-  config = {
-    bucket = "tapshalkar-com-tfstate"
-    prefix = "aws/accounts/projects/side-project"
+    prefix = "aws/accounts/certs/tapshalkar-com-certs"
   }
 }
 
@@ -97,22 +79,16 @@ resource "github_actions_secret" "aws_personal_role_arn" {
   plaintext_value = data.terraform_remote_state.aws_personal.outputs.github_actions_role_arn
 }
 
-resource "github_actions_secret" "aws_certs_1_role_arn" {
+resource "github_actions_secret" "aws_sandbox_role_arn" {
   repository      = data.github_repository.core_infra.name
-  secret_name     = "AWS_CERTS_1_ROLE_ARN"
-  plaintext_value = data.terraform_remote_state.aws_certs_1.outputs.github_actions_role_arn
+  secret_name     = "AWS_SANDBOX_ROLE_ARN"
+  plaintext_value = data.terraform_remote_state.aws_sandbox.outputs.github_actions_role_arn
 }
 
-resource "github_actions_secret" "aws_certs_2_role_arn" {
+resource "github_actions_secret" "aws_certs_role_arn" {
   repository      = data.github_repository.core_infra.name
-  secret_name     = "AWS_CERTS_2_ROLE_ARN"
-  plaintext_value = data.terraform_remote_state.aws_certs_2.outputs.github_actions_role_arn
-}
-
-resource "github_actions_secret" "aws_side_project_role_arn" {
-  repository      = data.github_repository.core_infra.name
-  secret_name     = "AWS_SIDE_PROJECT_ROLE_ARN"
-  plaintext_value = data.terraform_remote_state.aws_side_project.outputs.github_actions_role_arn
+  secret_name     = "AWS_CERTS_ROLE_ARN"
+  plaintext_value = data.terraform_remote_state.aws_certs.outputs.github_actions_role_arn
 }
 
 # ── AWS Actions variables ──────────────────────────────────────────────────────

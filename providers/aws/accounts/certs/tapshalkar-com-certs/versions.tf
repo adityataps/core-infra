@@ -10,8 +10,14 @@ terraform {
 
 provider "aws" {
   region = var.region
+  # Uses management account credentials to create the org member account
+}
+
+provider "aws" {
+  alias  = "account"
+  region = var.region
 
   assume_role {
-    role_arn = "arn:aws:iam::${var.account_id}:role/OrganizationAccountAccessRole"
+    role_arn = "arn:aws:iam::${aws_organizations_account.this.id}:role/OrganizationAccountAccessRole"
   }
 }

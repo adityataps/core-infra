@@ -1,6 +1,6 @@
-variable "account_id" {
+variable "account_email" {
   type        = string
-  description = "AWS account ID of the tapshalkar-com-certs account (used for assume_role in versions.tf)"
+  description = "Root email address for the tapshalkar-com-certs AWS account"
 }
 
 variable "region" {
@@ -23,5 +23,6 @@ variable "budget_thresholds" {
 
 variable "notification_email" {
   type        = string
-  description = "Email address for budget alert SNS subscription"
+  description = "Email address for budget alert SNS subscription. Defaults to the management account's notification_email if not set."
+  default     = null
 }
