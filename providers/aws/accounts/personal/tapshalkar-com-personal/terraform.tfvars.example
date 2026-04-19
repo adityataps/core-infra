@@ -1,5 +1,7 @@
-account_id         = "123456789012"
-region             = "us-east-1"
-budget_amount      = 10
-budget_thresholds  = [0.5, 0.9, 1.0]
-notification_email = "you@example.com"
+account_email = "root+personal@example.com"
+region        = "us-east-1"
+
+# Optional overrides (defaults shown)
+# budget_amount      = 10
+# budget_thresholds  = [0.5, 0.9, 1.0]
+# notification_email = "override@example.com"  # inherits from management account if unset
