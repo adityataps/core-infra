@@ -5,22 +5,22 @@ output "root_id" {
 
 output "personal_ou_id" {
   description = "ID of the personal/ OU"
-  value       = aws_organizations_organizational_unit.personal.id
+  value       = aws_organizations_organizational_unit.ous["personal"].id
 }
 
 output "certs_ou_id" {
   description = "ID of the certs/ OU"
-  value       = aws_organizations_organizational_unit.certs.id
+  value       = aws_organizations_organizational_unit.ous["certs"].id
 }
 
 output "projects_ou_id" {
   description = "ID of the projects/ OU"
-  value       = aws_organizations_organizational_unit.projects.id
+  value       = aws_organizations_organizational_unit.ous["projects"].id
 }
 
 output "management_ou_id" {
   description = "ID of the management/ OU"
-  value       = aws_organizations_organizational_unit.management.id
+  value       = aws_organizations_organizational_unit.ous["management"].id
 }
 
 output "sso_instance_arn" {

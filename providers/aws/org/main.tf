@@ -6,6 +6,14 @@ resource "aws_organizations_organization" "this" {
   ]
 }
 
+resource "aws_organizations_organizational_unit" "ous" {
+  for_each = local.ou_ids
+
+  name      = each.value
+  parent_id = aws_organizations_organization.this.roots[0].id
+}
+
+
 # ── IAM Identity Center ───────────────────────────────────────────────────────
 
 data "aws_ssoadmin_instances" "this" {}
@@ -58,24 +66,4 @@ resource "aws_ssoadmin_account_assignment" "aditya_admin" {
 
   target_type = "AWS_ACCOUNT"
   target_id   = each.value
-}
-
-resource "aws_organizations_organizational_unit" "personal" {
-  name      = "personal"
-  parent_id = aws_organizations_organization.this.roots[0].id
-}
-
-resource "aws_organizations_organizational_unit" "certs" {
-  name      = "certs"
-  parent_id = aws_organizations_organization.this.roots[0].id
-}
-
-resource "aws_organizations_organizational_unit" "projects" {
-  name      = "projects"
-  parent_id = aws_organizations_organization.this.roots[0].id
-}
-
-resource "aws_organizations_organizational_unit" "management" {
-  name      = "management"
-  parent_id = aws_organizations_organization.this.roots[0].id
 }

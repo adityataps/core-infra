@@ -2,18 +2,10 @@ data "google_organization" "this" {
   domain = var.domain
 }
 
-resource "google_folder" "management" {
-  display_name = "management"
-  parent       = data.google_organization.this.name
-}
+resource "google_folder" "folders" {
+  for_each = local.folder_names
 
-resource "google_folder" "personal" {
-  display_name = "personal"
-  parent       = data.google_organization.this.name
-}
-
-resource "google_folder" "certs" {
-  display_name = "certs"
+  display_name = each.value
   parent       = data.google_organization.this.name
 }
 

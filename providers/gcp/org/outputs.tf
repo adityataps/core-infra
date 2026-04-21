@@ -5,15 +5,15 @@ output "org_id" {
 
 output "management_folder_resource_name" {
   description = "Resource name of the management/ folder (format: folders/<ID>). Use as folder_id in google_project."
-  value       = google_folder.management.name
+  value       = google_folder.folders["management"].name
 }
 
 output "personal_folder_resource_name" {
   description = "Resource name of the personal/ folder (format: folders/<ID>). Use as folder_id in google_project."
-  value       = google_folder.personal.name
+  value       = google_folder.folders["personal"].name
 }
 
 output "certs_folder_resource_name" {
   description = "Resource name of the certs/ folder (format: folders/<ID>). Use as folder_id in google_project."
-  value       = google_folder.certs.name
+  value       = google_folder.folders["certs"].name
 }
