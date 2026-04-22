@@ -248,12 +248,8 @@ content = re.sub(
 new_block = f'\n{target}: pagerduty gcp-org github-init gcp-management\n\t@$(RUN) {module_path}\n'
 content = content.replace('# ── Tier 2:', new_block + '# ── Tier 2:')
 
-# 4. Append to ci-plan (GCP projects are accessible via GCP WIF auth in CI)
-content = content.rstrip('\n') + f'\n\t@$(RUN) {module_path}\n'
-
 open(makefile_path, 'w').write(content)
 print(f"✓ Added {target} to Makefile")
-print(f"✓ Added {module_path} to ci-plan")
 
 # 5. Increment TOTAL_MODULES in tf-all.sh
 tf_all = open(tf_all_path).read()
@@ -263,6 +259,45 @@ if m:
     open(tf_all_path, 'w').write(tf_all.replace(f'TOTAL_MODULES={old}', f'TOTAL_MODULES={new}'))
     print(f"✓ Updated TOTAL_MODULES: {old} → {new}")
 PYEOF
+
+# ── 3b. Patch ci-plan target ──────────────────────────────────────────────────
+# GCP projects are added to ci-plan so they're included in CI plan runs.
+# AWS accounts are intentionally excluded — they require separate AWS credentials.
+CI_PLAN_ENTRY="\t@\$(RUN) providers/gcp/projects/$FOLDER/$PROJECT_ID"
+
+python3 - "$REPO_ROOT/Makefile" "$CI_PLAN_ENTRY" <<'PYEOF'
+import sys, re
+
+path, entry = sys.argv[1], sys.argv[2]
+content = open(path).read()
+
+# Find the ci-plan target and append the new entry.
+# The target ends at the next blank line or end of file.
+pattern = r'(ci-plan:(?:.*\n)*?)((?:\t@.*\n)*\t@[^\n]+)(\n|$)'
+
+def insert_entry(m):
+    return m.group(1) + m.group(2) + '\n' + entry + m.group(3)
+
+new_content = re.sub(pattern, insert_entry, content, count=1)
+if new_content == content:
+    # Fallback: simpler pattern — find last @$(RUN) line in ci-plan block
+    lines = content.split('\n')
+    ci_plan_idx = next((i for i, l in enumerate(lines) if l.strip().startswith('ci-plan:')), None)
+    if ci_plan_idx is not None:
+        # Find the last @$(RUN) line in this target block
+        last_run_idx = ci_plan_idx
+        for i in range(ci_plan_idx + 1, len(lines)):
+            if lines[i].startswith('\t'):
+                last_run_idx = i
+            else:
+                break
+        lines.insert(last_run_idx + 1, entry)
+        new_content = '\n'.join(lines)
+
+open(path, 'w').write(new_content)
+PYEOF
+
+echo "✓ ci-plan target patched in Makefile"
 
 # ── Done ───────────────────────────────────────────────────────────────────────
 echo ""
