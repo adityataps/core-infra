@@ -33,7 +33,16 @@ RUN := scripts/tf-module.sh $(CMD) $(AUTO_APPROVE)
 # Run them individually: make hetzner | make mongodb | make supabase
 all: github-sync
 
-# ── Tier 4: github (2nd pass — writes AWS role ARNs as GH Actions secrets) ───
+# ── Tier 4: github (2nd pass — writes cloud account outputs as GH secrets) ────
+#
+# providers/github is applied TWICE per run (two-pass pattern):
+#   Pass 1 (github-init, tier 1): bootstraps the GitHub provider so downstream
+#     modules can read the repo's full_name from remote state.
+#   Pass 2 (github-sync, tier 4): re-applies after all cloud accounts are done,
+#     so GitHub Actions secrets (role ARNs, WIF providers) reflect current outputs.
+#
+# This breaks the circular dependency: secrets depend on account outputs, but
+# accounts read the repo name from github state — which must exist first.
 github-sync: gcp-management aws-management \
              gcp-personal-tapshalkar-com gcp-personal-sandbox \
              aws-personal-tapshalkar-com aws-personal-sandbox aws-certs
