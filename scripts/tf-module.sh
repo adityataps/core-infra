@@ -11,6 +11,15 @@
 #   2  drift detected (plan mode) or user aborted with 'q' (apply mode)
 set -euo pipefail
 
+if [[ $# -lt 3 ]]; then
+  echo "Usage: $0 <plan|apply> <auto_approve> <module_path>"
+  echo ""
+  echo "  plan|apply     terraform command to run"
+  echo "  auto_approve   0 (prompt) | 1 (no prompt)"
+  echo "  module_path    relative to repo root, e.g. providers/gcp/org"
+  exit 1
+fi
+
 CMD="$1"
 AUTO_APPROVE="$2"
 MODULE="$3"
