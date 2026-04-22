@@ -26,7 +26,8 @@ MODULE="$3"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MODULE_PATH="$REPO_ROOT/$MODULE"
-STATE_BUCKET="tapshalkar-com-tfstate"
+# shellcheck source=config.sh
+source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 PROGRESS_DIR="${TF_PROGRESS_DIR:-}"
 
 # ── Progress header ────────────────────────────────────────────────────────────

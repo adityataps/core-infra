@@ -19,7 +19,8 @@ VALID_FOLDERS=("management" "personal" "certs")
 GITHUB_REPO="adityataps/core-infra"
 ADMIN_USER="aditya@tapshalkar.com"
 MANAGEMENT_PROJECT_ID="tapshalkar-com"
-STATE_BUCKET="tapshalkar-com-tfstate"
+# shellcheck source=config.sh
+source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
 # ── Validate args ──────────────────────────────────────────────────────────────
 if [[ $# -ne 2 ]]; then

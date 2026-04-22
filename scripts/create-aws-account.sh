@@ -19,7 +19,8 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VALID_OUS=("certs" "projects" "personal" "management")
-STATE_BUCKET="tapshalkar-com-tfstate"
+# shellcheck source=config.sh
+source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
 # ── Validate args ──────────────────────────────────────────────────────────────
 if [[ $# -ne 2 ]]; then
