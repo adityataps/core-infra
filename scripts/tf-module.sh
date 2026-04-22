@@ -63,7 +63,11 @@ if [[ "$CMD" == "plan" ]]; then
       1) echo "✗ error      $MODULE" >> "$PROGRESS_DIR/results" ;;
     esac
   fi
-  exit $PLAN_EXIT
+  # Exit 0 for both "no changes" (0) and "changes detected" (2) so Make does not
+  # treat a module with pending changes as a failed prerequisite — that would skip
+  # all downstream modules. tf-all.sh synthesizes the real exit from the results
+  # file. Only exit 1 on actual Terraform errors.
+  [[ $PLAN_EXIT -eq 1 ]] && exit 1 || exit 0
 fi
 
 # ── Apply ─────────────────────────────────────────────────────────────────────

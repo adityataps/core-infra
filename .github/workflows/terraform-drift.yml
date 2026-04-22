@@ -34,7 +34,7 @@ jobs:
       - name: Detect Drift
         run: |
           set +e
-          make ci-plan CMD=plan
+          scripts/tf-all.sh plan ci-plan
           EXIT=$?
           set -e
           if [[ $EXIT -eq 2 ]]; then
