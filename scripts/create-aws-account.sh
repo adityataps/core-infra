@@ -247,11 +247,58 @@ if changed:
     open(path, 'w').write(content)
 PYEOF
 
+# ── 3. Patch Makefile + tf-all.sh ─────────────────────────────────────────────
+python3 - "$REPO_ROOT/Makefile" "$REPO_ROOT/scripts/tf-all.sh" "$OU" "$ACCOUNT_NAME" <<'PYEOF'
+import sys, re
+
+makefile_path, tf_all_path, ou, account_name = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+
+target      = f"aws-{ou}-{account_name}"
+module_path = f"providers/aws/accounts/{ou}/{account_name}"
+
+content = open(makefile_path).read()
+
+if target in content:
+    print(f"⚠ {target} already in Makefile — skipping")
+    sys.exit(0)
+
+# 1. Add to .PHONY (before the closing "        ci-plan" line)
+content = content.replace(
+    '        ci-plan',
+    f'        {target} \\\n        ci-plan'
+)
+
+# 2. Add to github-sync prerequisites (before its recipe line)
+content = re.sub(
+    r'(github-sync:.*?)(\n\t@\$\(RUN\) providers/github)',
+    lambda m: m.group(1) + f' \\\n             {target}' + m.group(2),
+    content,
+    flags=re.DOTALL
+)
+
+# 3. Insert target block in Tier 3 section
+new_block = f'\n{target}: pagerduty aws-org github-init aws-management\n\t@$(RUN) {module_path}\n'
+content = content.replace('# ── Tier 2:', new_block + '# ── Tier 2:')
+
+open(makefile_path, 'w').write(content)
+print(f"✓ Added {target} to Makefile")
+
+# 4. Increment TOTAL_MODULES in tf-all.sh
+tf_all = open(tf_all_path).read()
+m = re.search(r'TOTAL_MODULES=(\d+)', tf_all)
+if m:
+    old, new = int(m.group(1)), int(m.group(1)) + 1
+    open(tf_all_path, 'w').write(tf_all.replace(f'TOTAL_MODULES={old}', f'TOTAL_MODULES={new}'))
+    print(f"✓ Updated TOTAL_MODULES: {old} → {new}")
+PYEOF
+
 # ── Done ───────────────────────────────────────────────────────────────────────
 echo ""
 echo "✓ '$ACCOUNT_NAME' scaffolded. Files changed:"
 echo "  + providers/aws/accounts/$OU/$ACCOUNT_NAME/  (new)"
 echo "  ~ providers/github/main.tf"
+echo "  ~ Makefile"
+echo "  ~ scripts/tf-all.sh"
 echo ""
 echo "Next steps:"
 echo ""
