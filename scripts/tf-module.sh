@@ -33,15 +33,22 @@ fi
 
 # ── Init ──────────────────────────────────────────────────────────────────────
 cd "$MODULE_PATH"
+TFINIT_LOG=$(mktemp /tmp/tf-init.XXXXXX)
+
+# ── Plan ──────────────────────────────────────────────────────────────────────
+TFPLAN=$(mktemp /tmp/tf-plan.XXXXXX)
+trap 'rm -f "$TFINIT_LOG" "$TFPLAN"' EXIT
+
 terraform init \
   -backend-config="bucket=$STATE_BUCKET" \
   -reconfigure \
   -input=false \
-  -no-color 2>&1 | grep -E "^(Terraform|Error|Warning|Initializing)" || true
-
-# ── Plan ──────────────────────────────────────────────────────────────────────
-TFPLAN=$(mktemp /tmp/tf-plan.XXXXXX)
-trap 'rm -f "$TFPLAN"' EXIT
+  -no-color > "$TFINIT_LOG" 2>&1 || {
+    grep -E "^(Terraform|Error|Warning|Initializing)" "$TFINIT_LOG" || true
+    echo "Error: terraform init failed in $MODULE" >&2
+    exit 1
+  }
+grep -E "^(Terraform|Error|Warning|Initializing)" "$TFINIT_LOG" || true
 
 if [[ "$CMD" == "plan" ]]; then
   set +e
