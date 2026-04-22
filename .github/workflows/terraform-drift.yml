@@ -1,0 +1,43 @@
+name: Terraform Drift Detection
+
+on:
+  schedule:
+    # Daily at 09:00 UTC. Note: GitHub disables scheduled workflows
+    # automatically after 60 days of repo inactivity.
+    - cron: '0 9 * * *'
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  drift:
+    name: Drift Detection
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.5"
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Detect Drift
+        run: |
+          set +e
+          make ci-plan CMD=plan
+          EXIT=$?
+          set -e
+          if [[ $EXIT -eq 2 ]]; then
+            echo "::warning::Drift detected — one or more modules have changes outside Terraform state."
+          fi
+          exit $EXIT
