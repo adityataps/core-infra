@@ -29,7 +29,7 @@ RUN := scripts/tf-module.sh $(CMD) $(AUTO_APPROVE)
         ci-plan
 
 # ── Entry point ───────────────────────────────────────────────────────────────
-all: github-sync
+all: github-sync hetzner mongodb supabase
 
 # ── Tier 4: github (2nd pass — writes AWS role ARNs as GH Actions secrets) ───
 github-sync: gcp-management aws-management \
