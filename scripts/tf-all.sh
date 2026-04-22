@@ -39,7 +39,14 @@ export TF_PROGRESS_DIR="$PROGRESS_DIR"
 # ── Run ───────────────────────────────────────────────────────────────────────
 cd "$REPO_ROOT"
 set +e
-make all CMD="$CMD" AUTO_APPROVE="$AUTO_APPROVE"
+# -k (keep going) in plan mode: continue past individual module failures so all
+# modules are planned and the summary shows the full picture. Apply mode stays
+# fail-fast — downstream modules depend on upstream state being applied first.
+if [[ "$CMD" == "plan" ]]; then
+  make -k all CMD="$CMD" AUTO_APPROVE="$AUTO_APPROVE"
+else
+  make all CMD="$CMD" AUTO_APPROVE="$AUTO_APPROVE"
+fi
 MAKE_EXIT=$?
 set -e
 
