@@ -1,19 +1,21 @@
 resource "google_monitoring_alert_policy" "default" {
   project      = google_project.this.project_id
-  display_name = "${var.project_id} — Default Alert Policy"
+  display_name = "${var.project_id} — CPU Utilization > 80%"
   combiner     = "OR"
-  enabled      = false
+  enabled      = true
 
-  # The GCP provider requires at least one conditions block. This stub condition
-  # is intentionally inert (equality check that never triggers). Replace with
-  # real conditions to activate monitoring, e.g. CPU or memory thresholds.
   conditions {
-    display_name = "Stub — replace with real condition"
+    display_name = "GCE instance CPU utilization > 80%"
     condition_threshold {
       filter          = "resource.type=\"gce_instance\" AND metric.type=\"compute.googleapis.com/instance/cpu/utilization\""
       comparison      = "COMPARISON_GT"
-      threshold_value = 0.99
-      duration        = "0s"
+      threshold_value = 0.8
+      duration        = "300s"
+
+      aggregations {
+        alignment_period   = "60s"
+        per_series_aligner = "ALIGN_MEAN"
+      }
     }
   }
 
