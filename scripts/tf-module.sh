@@ -80,9 +80,17 @@ if [[ "$CMD" == "plan" ]]; then
 fi
 
 # ── Apply ─────────────────────────────────────────────────────────────────────
-terraform plan -input=false -out="$TFPLAN"
+set +e
+terraform plan -detailed-exitcode -input=false -out="$TFPLAN"
+PLAN_EXIT=$?
+set -e
 
-if [[ "$AUTO_APPROVE" == "1" ]]; then
+[[ $PLAN_EXIT -eq 1 ]] && exit 1
+
+if [[ $PLAN_EXIT -eq 0 ]]; then
+  echo "No changes. Skipping $MODULE"
+  RESULT="○ no change  $MODULE"
+elif [[ "$AUTO_APPROVE" == "1" ]]; then
   terraform apply -input=false "$TFPLAN"
   RESULT="✓ applied    $MODULE"
 else

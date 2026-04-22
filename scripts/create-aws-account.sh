@@ -59,7 +59,7 @@ echo ""
 # ── 1. Create account root directory ──────────────────────────────────────────
 mkdir -p "$TARGET"
 
-# versions.tf — assumes role into the member account via OrganizationAccountAccessRole
+# versions.tf — provider + backend in one block to avoid duplicate terraform{} issues
 cat > "$TARGET/versions.tf" <<EOF
 terraform {
   required_version = ">= 1.5"
@@ -69,6 +69,11 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "gcs" {
+    # bucket is set via -backend-config or backend.hcl (gitignored)
+    prefix = "aws/accounts/$OU/$ACCOUNT_NAME"
+  }
 }
 
 provider "aws" {
@@ -76,16 +81,6 @@ provider "aws" {
 
   assume_role {
     role_arn = "arn:aws:iam::\${var.account_id}:role/OrganizationAccountAccessRole"
-  }
-}
-EOF
-
-# backend.tf
-cat > "$TARGET/backend.tf" <<EOF
-terraform {
-  backend "gcs" {
-    # bucket is set via -backend-config or backend.hcl (gitignored)
-    prefix = "aws/accounts/$OU/$ACCOUNT_NAME"
   }
 }
 EOF

@@ -26,7 +26,7 @@ resource "pagerduty_service" "gcp_monitoring" {
   name                    = "GCP Monitoring"
   escalation_policy       = pagerduty_escalation_policy.default.id
   auto_resolve_timeout    = 86400
-  acknowledgement_timeout = 0
+  acknowledgement_timeout = "null"
   alert_creation          = "create_alerts_and_incidents"
 }
 
@@ -44,7 +44,7 @@ resource "pagerduty_service" "aws_billing" {
   name                    = "AWS Monitoring"
   escalation_policy       = pagerduty_escalation_policy.default.id
   auto_resolve_timeout    = 86400
-  acknowledgement_timeout = 0
+  acknowledgement_timeout = "null"
   alert_creation          = "create_alerts_and_incidents"
 }
 

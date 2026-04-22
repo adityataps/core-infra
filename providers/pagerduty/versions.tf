@@ -6,6 +6,11 @@ terraform {
       version = "~> 3.0"
     }
   }
+
+  backend "gcs" {
+    # bucket is set via -backend-config or backend.hcl (gitignored)
+    prefix = "pagerduty"
+  }
 }
 
 provider "pagerduty" {

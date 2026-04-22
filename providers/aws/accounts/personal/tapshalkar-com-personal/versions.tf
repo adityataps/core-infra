@@ -6,6 +6,11 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "gcs" {
+    # bucket is set via -backend-config or backend.hcl (gitignored)
+    prefix = "aws/accounts/personal/tapshalkar-com-personal"
+  }
 }
 
 provider "aws" {
