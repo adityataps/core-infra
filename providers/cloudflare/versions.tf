@@ -8,7 +8,7 @@ terraform {
   }
 
   backend "gcs" {
-    # bucket is set via -backend-config or backend.hcl (gitignored)
+    # bucket is set via -backend-config=backend.hcl (committed, non-sensitive)
     prefix = "cloudflare"
   }
 }

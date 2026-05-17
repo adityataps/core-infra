@@ -1,0 +1,1 @@
+bucket = "tapshalkar-com-tfstate"

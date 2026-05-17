@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars and fill in real values (gitignored).
+#
+# api_token: Cloudflare API token — create at My Profile → API Tokens.
+#   Required permissions:
+#     Zone:Zone:Edit   — read and manage zone settings
+#     Zone:DNS:Edit    — create, update, delete DNS records
+#
+# account_id: visible in the Cloudflare dashboard sidebar on any zone page.
+
+api_token  = "your-cloudflare-api-token"
+account_id = "your-cloudflare-account-id"
