@@ -29,7 +29,9 @@ RUN := scripts/tf-module.sh $(CMD) $(AUTO_APPROVE)
         ci-plan
 
 # ── Entry point ───────────────────────────────────────────────────────────────
-all: github-sync hetzner mongodb supabase
+# hetzner, mongodb, supabase are excluded until they contain real resources.
+# Run them individually: make hetzner | make mongodb | make supabase
+all: github-sync
 
 # ── Tier 4: github (2nd pass — writes cloud account outputs as GH secrets) ────
 #
