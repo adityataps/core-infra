@@ -1,5 +1,37 @@
 # cloudflare
 
+Manages Cloudflare DNS zones for all domains. `zones.tf` is the single source of truth — add one entry per domain. The `modules/zone/` module owns the `cloudflare_zone` resource and all DNS record types.
+
+## Setup
+
+```bash
+cp terraform.tfvars.example terraform.tfvars   # fill in api_token + account_id
+terraform init -backend-config=backend.hcl
+```
+
+API token scopes: **Zone:Zone:Edit** + **Zone:DNS:Edit**.
+
+## Adding a new zone
+
+```bash
+# From repo root:
+./scripts/create-cloudflare-zone.sh example.com
+# Fill in DNS records in providers/cloudflare/zones.tf, then:
+cd providers/cloudflare
+terraform import 'module.zones["example.com"].cloudflare_zone.this' <ZONE_ID>
+# Import each existing record, then:
+terraform plan   # expect no changes
+terraform apply
+```
+
+## DDNS-managed records
+
+Records updated by an external DDNS agent must be excluded from `zones.tf` and never imported. Add a comment documenting the exclusion. Terraform will not touch unmanaged records.
+
+## TXT record content
+
+Specify content **without** surrounding double quotes — the provider adds them. Example: `content = "v=spf1 include:_spf.google.com ~all"`.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

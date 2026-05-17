@@ -32,7 +32,8 @@ terraform destroy
 
 ## Key Conventions
 
-- `.tfvars` and `.tfvars.json` files are gitignored — they contain environment-specific secrets and should never be committed.
+- `.tfvars` and `.tfvars.json` files are gitignored — they contain secrets. Use the committed `terraform.tfvars.example` in each provider as a template.
+- `backend.hcl` files are **committed** in every workspace — they contain only the state bucket name (`tapshalkar-com-tfstate`), which is not sensitive. Run `terraform init -backend-config=backend.hcl` after cloning.
 - `override.tf` / `*_override.tf` files are also gitignored — they are used for local overrides only.
 - State files (`*.tfstate`, `*.tfstate.*`) are excluded from version control; remote state backends (e.g., S3, GCS, Terraform Cloud) should be configured for shared use.
 
@@ -43,6 +44,7 @@ terraform destroy
 - `providers/gcp/modules/baseline/` — reusable module configuring GCP project defaults.
 - `providers/gcp/projects/management/` — management/infra projects (TF state, WIF, billing). `tapshalkar-com` lives here.
 - `providers/gcp/projects/<folder>/<name>/` — per-project instantiation of the baseline module, grouped by folder (`personal/`, `certs/`).
+- `providers/cloudflare/` — Cloudflare DNS zones. `zones.tf` is the single source of truth for all domains; `modules/zone/` is the reusable per-zone module.
 - `providers/pagerduty/` — PagerDuty service + integration. Apply before GCP projects.
 - `providers/aws/` — AWS infrastructure (future, same pattern).
 - `scripts/` — helper scripts for import, init, etc.
@@ -119,3 +121,63 @@ The PagerDuty root (`providers/pagerduty/`) is applied independently from GCP. T
 ### Adding PagerDuty to another GCP project
 
 Point the new project's `main.tf` at the same `terraform_remote_state.pagerduty` data source — the same PagerDuty service handles all GCP projects.
+
+## Cloudflare DNS
+
+All zones are managed from a single root at `providers/cloudflare/`. `zones.tf` is the single source of truth — one entry per domain. The `modules/zone/` module owns the `cloudflare_zone` resource and all DNS record types (A, MX, CNAME, TXT, SRV).
+
+### First-time setup
+
+1. Copy the example vars and fill in real values:
+   ```bash
+   cp providers/cloudflare/terraform.tfvars.example providers/cloudflare/terraform.tfvars
+   # edit terraform.tfvars: api_token, account_id
+   ```
+   API token scopes required: **Zone:Zone:Edit** + **Zone:DNS:Edit**.
+   Account ID is visible in the Cloudflare dashboard sidebar.
+
+2. Initialize:
+   ```bash
+   cd providers/cloudflare
+   terraform init -backend-config=backend.hcl
+   ```
+
+3. Import the zone (get the zone ID from the Cloudflare dashboard sidebar):
+   ```bash
+   terraform import 'module.zones["example.com"].cloudflare_zone.this' <ZONE_ID>
+   ```
+
+4. Import existing DNS records — one command per record:
+   ```bash
+   # A record:   key = "name:content"
+   terraform import 'module.zones["example.com"].cloudflare_dns_record.a["@:1.2.3.4"]' '<ZONE_ID>/<RECORD_ID>'
+   # MX record:  key = "name:content"
+   terraform import 'module.zones["example.com"].cloudflare_dns_record.mx["@:smtp.google.com"]' '<ZONE_ID>/<RECORD_ID>'
+   # CNAME:      key = "name" (no content)
+   terraform import 'module.zones["example.com"].cloudflare_dns_record.cname["www"]' '<ZONE_ID>/<RECORD_ID>'
+   # TXT:        key = "name:content" (content without outer quotes)
+   terraform import 'module.zones["example.com"].cloudflare_dns_record.txt["@:v=spf1 include:_spf.google.com ~all"]' '<ZONE_ID>/<RECORD_ID>'
+   ```
+   Record IDs are available via the Cloudflare API:
+   ```bash
+   curl "https://api.cloudflare.com/client/v4/zones/<ZONE_ID>/dns_records" \
+     -H "Authorization: Bearer <API_TOKEN>" | python3 -m json.tool
+   ```
+
+5. `terraform plan` — should show no changes after all records are imported.
+
+### TXT record content format
+
+The Cloudflare provider v5 expects TXT content **without** surrounding double quotes. The provider adds the DNS wire-format quotes itself. If `terraform plan` shows a diff stripping quotes from existing records, run `terraform apply` once to normalize — subsequent plans will be clean.
+
+### DDNS-managed records
+
+Records managed by an external DDNS agent (e.g. `favonia/cloudflare-ddns`) must **not** be declared in `zones.tf` and must **not** be imported into state. Terraform has no knowledge of unmanaged records and will never touch them. Add a comment in `zones.tf` to document which records are excluded and why.
+
+### Adding a new zone
+
+```bash
+./scripts/create-cloudflare-zone.sh example.com
+```
+
+This appends a stub entry to `zones.tf` and prints the import commands to run. Fill in the DNS records in `zones.tf` before running `terraform apply`.
