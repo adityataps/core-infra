@@ -23,6 +23,8 @@
       <excludeFolder url="file://$MODULE_DIR$/providers/aws/accounts/management/tapshalkar-com/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/aws/accounts/personal/tapshalkar-com-personal/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/aws/accounts/personal/tapshalkar-com-sandbox/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/cloudflare/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/cloudflare/modules/zone/.terraform" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
