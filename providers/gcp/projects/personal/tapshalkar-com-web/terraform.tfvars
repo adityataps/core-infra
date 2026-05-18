@@ -1,5 +1,5 @@
 project_id    = "tapshalkar-com-web"
-project_name  = "Tapshalkar-com-web"
+project_name  = "tapshalkar-com-web"
 admin_user    = "aditya@tapshalkar.com"
 region        = "us-central1"
 budget_amount = 20
