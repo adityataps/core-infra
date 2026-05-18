@@ -57,6 +57,11 @@ cp -r "$TEMPLATE" "$TARGET"
 # Remove files that should not be copied
 rm -rf "$TARGET/.terraform" "$TARGET/.terraform.lock.hcl" "$TARGET/terraform.tfvars" "$TARGET/README.md"
 
+# ── Generate backend.hcl ──────────────────────────────────────────────────────
+cat > "$TARGET/backend.hcl" <<EOF
+bucket = "$STATE_BUCKET"
+EOF
+
 # ── Patch backend.tf prefix ───────────────────────────────────────────────────
 sed -i '' \
   "s|prefix = \"gcp/projects/management/tapshalkar-com\"|prefix = \"gcp/projects/$FOLDER/$PROJECT_ID\"|" \

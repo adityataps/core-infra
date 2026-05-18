@@ -179,6 +179,11 @@ cat > "$TARGET/README.md" <<EOF
 <!-- END_TF_DOCS -->
 EOF
 
+# backend.hcl
+cat > "$TARGET/backend.hcl" <<EOF
+bucket = "$STATE_BUCKET"
+EOF
+
 echo "✓ Account root files written to providers/aws/accounts/$OU/$ACCOUNT_NAME/"
 
 # ── 2. Patch providers/github/main.tf ─────────────────────────────────────────
