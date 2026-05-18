@@ -13,6 +13,7 @@ Create a new GCP project (`tapshalkar-com-web`) in the `personal` folder of the 
 - **No new `projects/` subdirectory.** The project sits at `providers/gcp/projects/personal/tapshalkar-com-web/`, consistent with sibling personal projects (`tapshalkar-com-personal`, `tapshalkar-com-sandbox`).
 - **Use `create-gcp-project.sh` for scaffolding.** The script handles template copy, `backend.tf`/`main.tf`/`variables.tf` patching, `terraform.tfvars` generation, and Makefile + `tf-all.sh` wiring.
 - **Web-specific overrides applied post-scaffold.** `storage.googleapis.com` added to `enabled_apis`; `enable_data_access_audit_logs` defaulted to `false` (static CDN traffic doesn't need billable DATA_READ/WRITE logs); `labels.env` set to `"web"`.
+- **Both scripts explicitly generate `backend.hcl`.** Previously the GCP script got `backend.hcl` by accident via template copy; the AWS script didn't generate it at all. Both scripts are updated to write `backend.hcl` explicitly from `$STATE_BUCKET` (sourced from `config.sh`), ensuring the bucket name stays in sync with the single source of truth.
 
 ## Scope
 
@@ -22,8 +23,10 @@ This spec covers only the Terraform project scaffolding. The actual Cloud Storag
 
 | File | Change |
 |------|--------|
+| `scripts/create-gcp-project.sh` | Explicitly write `backend.hcl` from `$STATE_BUCKET` instead of relying on template copy |
+| `scripts/create-aws-account.sh` | Add `backend.hcl` generation (currently missing) |
 | `providers/gcp/projects/personal/tapshalkar-com-web/backend.tf` | Created by script — prefix `gcp/projects/personal/tapshalkar-com-web` |
-| `providers/gcp/projects/personal/tapshalkar-com-web/backend.hcl` | Created by script — bucket `tapshalkar-com-tfstate` |
+| `providers/gcp/projects/personal/tapshalkar-com-web/backend.hcl` | Created by script — `bucket = "tapshalkar-com-tfstate"` |
 | `providers/gcp/projects/personal/tapshalkar-com-web/main.tf` | Created by script — uses `personal_folder_resource_name` |
 | `providers/gcp/projects/personal/tapshalkar-com-web/variables.tf` | Created by script, then patched for web defaults |
 | `providers/gcp/projects/personal/tapshalkar-com-web/outputs.tf` | Created by script — unchanged |
@@ -34,13 +37,15 @@ This spec covers only the Terraform project scaffolding. The actual Cloud Storag
 
 ## Implementation Steps
 
-1. Run `./scripts/create-gcp-project.sh personal tapshalkar-com-web`
-2. In the generated `variables.tf`, apply three patches:
+1. Update `scripts/create-gcp-project.sh`: after the template copy, explicitly write `backend.hcl` from `$STATE_BUCKET` (replaces the copied version)
+2. Update `scripts/create-aws-account.sh`: add a `backend.hcl` generation step alongside the existing file writes
+3. Run `./scripts/create-gcp-project.sh personal tapshalkar-com-web`
+4. In the generated `variables.tf`, apply three patches:
    - Add `"storage.googleapis.com"` to `enabled_apis` default list
    - Change `enable_data_access_audit_logs` default to `false`
    - Change `labels` default `env` value to `"web"`
-3. Review generated `terraform.tfvars` — update `budget_amount` to `20` if not already set
-4. Commit all scaffolded files (excluding `terraform.tfvars`)
+5. Review generated `terraform.tfvars` — update `budget_amount` to `20` if not already set
+6. Commit all scaffolded files (excluding `terraform.tfvars`)
 
 ## Apply Instructions (manual, post-commit)
 
