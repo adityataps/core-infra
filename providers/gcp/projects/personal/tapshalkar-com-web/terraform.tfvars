@@ -23,6 +23,7 @@ enabled_apis = [
   "run.googleapis.com",
   "cloudscheduler.googleapis.com",
   "orgpolicy.googleapis.com",
+  "documentai.googleapis.com",
 ]
 
 labels = {
