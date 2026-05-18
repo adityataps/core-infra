@@ -1,0 +1,28 @@
+project_id   = "your-gcp-project-id"
+project_name = "My GCP Project"
+admin_user   = "you@gmail.com"
+region          = "us-central1"
+budget_amount   = 20
+budget_thresholds = [0.5, 0.9, 1.0]
+github_repo     = "your-github-username/core-infra"
+
+labels = {
+  env          = "web"
+  owner        = "your-name"
+  "managed-by" = "terraform"
+}
+
+enabled_apis = [
+  "compute.googleapis.com",
+  "iam.googleapis.com",
+  "cloudbilling.googleapis.com",
+  "billingbudgets.googleapis.com",
+  "cloudresourcemanager.googleapis.com",
+  "logging.googleapis.com",
+  "monitoring.googleapis.com",
+  "iamcredentials.googleapis.com",
+  "storage.googleapis.com",
+]
+
+# enable_data_access_audit_logs = false  # default is false; set to true to enable billable DATA_READ/WRITE audit logs
+

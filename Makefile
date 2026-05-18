@@ -26,6 +26,7 @@ RUN := scripts/tf-module.sh $(CMD) $(AUTO_APPROVE)
         gcp-personal-tapshalkar-com gcp-personal-sandbox \
         aws-personal-tapshalkar-com aws-personal-sandbox aws-certs \
         github-sync \
+        gcp-personal-tapshalkar-com-web \
         ci-plan
 
 # ── Entry point ───────────────────────────────────────────────────────────────
@@ -45,7 +46,8 @@ all: github-sync
 # accounts read the repo name from github state — which must exist first.
 github-sync: gcp-management aws-management \
              gcp-personal-tapshalkar-com gcp-personal-sandbox \
-             aws-personal-tapshalkar-com aws-personal-sandbox aws-certs
+             aws-personal-tapshalkar-com aws-personal-sandbox aws-certs \
+             gcp-personal-tapshalkar-com-web
 	@$(RUN) providers/github
 
 # ── Tier 3: depend on management accounts ─────────────────────────────────────
@@ -64,6 +66,9 @@ aws-personal-sandbox: pagerduty aws-org github-init aws-management
 aws-certs: pagerduty aws-org github-init aws-management
 	@$(RUN) providers/aws/accounts/certs/tapshalkar-com-certs
 
+
+gcp-personal-tapshalkar-com-web: pagerduty gcp-org github-init gcp-management
+	@$(RUN) providers/gcp/projects/personal/tapshalkar-com-web
 # ── Tier 2: depend on github + pagerduty + org layers ─────────────────────────
 gcp-management: pagerduty gcp-org github-init
 	@$(RUN) providers/gcp/projects/management/tapshalkar-com
@@ -102,3 +107,4 @@ ci-plan:
 	@$(RUN) providers/gcp/projects/management/tapshalkar-com
 	@$(RUN) providers/gcp/projects/personal/tapshalkar-com-personal
 	@$(RUN) providers/gcp/projects/personal/tapshalkar-com-sandbox
+\t@$(RUN) providers/gcp/projects/personal/tapshalkar-com-web
