@@ -25,6 +25,7 @@
       <excludeFolder url="file://$MODULE_DIR$/providers/aws/accounts/personal/tapshalkar-com-sandbox/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/cloudflare/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/cloudflare/modules/zone/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/tapshalkar-com-web/.terraform" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
