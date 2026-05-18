@@ -22,6 +22,7 @@ enabled_apis = [
   "secretmanager.googleapis.com",
   "run.googleapis.com",
   "cloudscheduler.googleapis.com",
+  "orgpolicy.googleapis.com",
 ]
 
 labels = {
