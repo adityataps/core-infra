@@ -2,22 +2,22 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/mongodb/mongodbatlas" {
-  version     = "2.10.0"
+  version     = "2.13.0"
   constraints = "~> 2.0"
   hashes = [
-    "h1:ANTVh54j6xFC+LFAxVoPCph3hp/Mdft/6GaykhCC2IU=",
-    "zh:0abc6ee2ae0fcfa1d6caec7892ba31527dc2edc01a1e3061484f5d4a1c9f974a",
-    "zh:0dfcf4d37f9e4fe05d3075ebda43aa70d97197f6e50a69ffa2a73916fd93e5a3",
-    "zh:15d81e2e81ce1769d2ba3b9cdcddeb1f40086fdcf933661f15d5f5b212e2d109",
-    "zh:1af6d442899d5045ad636d7c21d4d3bdc5d1f260da3774e3d013e9a74e57d24b",
-    "zh:5cb6aca5945a475ff0e816d44b49d265ddd23840d0fe515c722e328e19d9b72d",
-    "zh:7321bb6fccb9bedd9355e37b1866d512f893431df1d523475561f2fc3f0c088c",
-    "zh:8faee69e592b91f91d204ba286f43a93551d4514c3fadbe464b650a695aa1eb8",
-    "zh:a3b2a390fdbc974800669a024bbdc9049b02cbf2dfa1d60aa1f53f712f6e7ebf",
-    "zh:d239aed06dd972a9f01acc6045b1dcb5d22f07130afb8cb1319febd0f695538c",
-    "zh:da27139a60cbab9f48e51a562e222bfea72b0f8b839d71742cc511d8b91ed81a",
-    "zh:ec12f218f1a99a09f5a331508fce90d82eeb208b5eafab05fe3b37769b8b820e",
-    "zh:f5fd2901f85adfb892d9109d7b82bd10ebf944f5001c9203f46ba9b906ed113f",
-    "zh:f7b6f3a9f2dbb5c9f86a438e117196a7e2a991f6ad1167da7c3777296d7096cd",
+    "h1:XAmxjrrq4u0BdbOyJa67WbboADuKw3fNHcadKrmism8=",
+    "zh:188d8bcc1b0c1ce0e5e576391c0a174191c0092c3c0465062c2b2f6e2c392c38",
+    "zh:21eda34d5a80c58e0b5d51803e119bbcc6423efdb6abdc1651255f2fa25ecfc0",
+    "zh:3fbc0db5acb5a13b0f47a466974c6387a76cc81455e3f0881b2ec1123fa3ebe6",
+    "zh:4160faa469e59f89636d5e83ebdbbabd85851df22f52b264b4b9df6748daefc8",
+    "zh:4d1cf6c3b1c02c87a8ef86cc599bbce722982a245c6d05a3113a94fd30e8ac19",
+    "zh:61fb433b3268e681a713277e1d99c977e6f4e85ed8ca0e312fb4a51901a1ca3a",
+    "zh:7a70a89a49fa9a1dce07a7d3a64f46bef4ec28b8a7d329ba51c6e5057988ddd2",
+    "zh:8ff2ec079f0a33d94f680738d1d9b34a4b5f576d9f1ad9b9ce8816710a7de312",
+    "zh:a098a0978856c4bd87e478f4ae0b8c994fcf438ed542e5171970412e0da94e23",
+    "zh:bc59b9c9af20edb1b5dfa44fe29aa7022fe47c3dcbb1f1cd42037bc86b0c526c",
+    "zh:d967970e8f22bfc4037b7962d1ffbb7400de4f3ed3cfcf4ab7abf47d4ac1d897",
+    "zh:d97ce6aebfa9b0ddf3f1a0df4cae58c45656d76d8dbefd70602080a7916f7354",
+    "zh:f408ccedeb03b4779cde64eeeb0f3067cea43e200139a3956baae52c85d2b488",
   ]
 }
