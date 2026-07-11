@@ -7,7 +7,7 @@ data "terraform_remote_state" "org" {
 }
 
 resource "aws_organizations_account" "this" {
-  name      = "tapshalkar-com-vista-hackathon-2026"
+  name      = "tapshalkar-vista-hackathon-26"
   email     = var.account_email
   parent_id = data.terraform_remote_state.org.outputs.personal_ou_id
 
@@ -47,7 +47,7 @@ module "baseline" {
     aws = aws.account
   }
 
-  account_name              = "tapshalkar-com-vista-hackathon-2026"
+  account_name              = "tapshalkar-vista-hackathon-26"
   region                    = var.region
   github_repo               = data.terraform_remote_state.github.outputs.core_infra_repo_full_name
   budget_amount             = var.budget_amount
