@@ -186,6 +186,22 @@ content = mgmt_var + content
 
 open(path, 'w').write(content)
 PYEOF
+
+  # Non-management projects don't declare a billing_account variable (see above),
+  # so the template's billing_account_id output would dangle. Strip it.
+  python3 - "$TARGET/outputs.tf" <<'PYEOF'
+import sys, re
+
+path = sys.argv[1]
+content = open(path).read()
+content = re.sub(
+    r'output "billing_account_id" \{.*?\n\}\n\n',
+    '',
+    content,
+    flags=re.DOTALL
+)
+open(path, 'w').write(content)
+PYEOF
 fi
 
 # ── Generate terraform.tfvars ─────────────────────────────────────────────────
@@ -268,7 +284,7 @@ PYEOF
 # ── 3b. Patch ci-plan target ──────────────────────────────────────────────────
 # GCP projects are added to ci-plan so they're included in CI plan runs.
 # AWS accounts are intentionally excluded — they require separate AWS credentials.
-CI_PLAN_ENTRY="\t@\$(RUN) providers/gcp/projects/$FOLDER/$PROJECT_ID"
+CI_PLAN_ENTRY=$'\t'"@\$(RUN) providers/gcp/projects/$FOLDER/$PROJECT_ID"
 
 python3 - "$REPO_ROOT/Makefile" "$CI_PLAN_ENTRY" <<'PYEOF'
 import sys, re
