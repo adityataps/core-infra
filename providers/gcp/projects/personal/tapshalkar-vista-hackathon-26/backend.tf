@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
     # bucket is set via -backend-config or backend.hcl (gitignored)
-    prefix = "gcp/projects/personal/tapshalkar-com-vista-hackathon-2026"
+    prefix = "gcp/projects/personal/tapshalkar-vista-hackathon-26"
   }
 }

@@ -1,4 +1,4 @@
-project_id        = "tapshalkar-com-vista-hackathon-2026"
+project_id        = "tapshalkar-vista-hackathon-26"
 project_name      = "Vista Hackathon 2026"
 admin_user        = "aditya@tapshalkar.com"
 region            = "us-east1"
