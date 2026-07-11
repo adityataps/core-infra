@@ -18,18 +18,27 @@ before the event per the hackathon rules; building application logic is not.
 
 - Stand up one new GCP project and one new AWS account, both named
   `vista-hackathon-2026`, under the existing `personal/` folder/OU.
-- Give each teammate their own named IAM identity in both clouds (auditable,
-  individually revocable after the event) rather than a shared credential.
 - Enable the GCP APIs needed for Vertex AI–based agent development; document the
   one manual step AWS requires (Bedrock model access) since it can't be automated
   via Terraform.
 - Cap spend with tight, low-threshold budget alerts appropriate for a ~2-day
   build window.
-- Do all of this as a minimal, backward-compatible extension of the existing
-  shared baseline modules — zero impact on other already-provisioned projects.
+- Provision both as plain, unmodified instantiations of the existing shared
+  baseline modules — zero changes to shared module code, zero impact on other
+  already-provisioned projects.
 
 ## Non-Goals
 
+- **Teammate IAM access.** Originally planned as an extension to the shared
+  baseline modules (see "Superseded" below), but this repo (`core-infra`) also
+  manages unrelated personal domains, certs, and other personal projects —
+  granting teammates access to *this* repo's Terraform/state would over-expose
+  scope. Teammate access will instead be handled by a separate,
+  hackathon-specific repo (not yet created) that teammates actually have access
+  to. That repo's own IaC — created independently, possibly at or just before
+  the event — is responsible for creating individual teammate identities
+  against the `vista-hackathon-2026` project/account provisioned here. Out of
+  scope for this spec.
 - No application-specific infrastructure (agent hosting, databases, etc.) —
   the challenge prompt isn't known until the event starts, and pre-building app
   logic is against the rules.
@@ -53,37 +62,15 @@ This wires up remote state, GitHub Actions OIDC, budget resources, and
 Makefile/`tf-all.sh` targets automatically, following the exact pattern used by
 every other project/account in this repo.
 
-### 2. Teammate IAM — baseline module extension
+### 2. Teammate IAM — superseded, out of scope
 
-Today, `providers/gcp/modules/baseline` supports exactly one identity
-(`admin_user`, bound as `roles/owner`), and `providers/aws/modules/baseline` has
-no IAM user support at all — only the GitHub Actions OIDC role. Individual
-teammate access requires extending both shared modules.
-
-**GCP (`providers/gcp/modules/baseline`)**
-
-- New variable `teammate_emails` (`list(string)`, default `[]`).
-- New resource: `google_project_iam_member` with `for_each` over
-  `toset(var.teammate_emails)`, binding each as `roles/editor` — project-scoped,
-  not org-level.
-
-**AWS (`providers/aws/modules/baseline`)**
-
-- New variable `teammate_usernames` (`list(string)`, default `[]`).
-- New resources per username (`for_each`):
-  - `aws_iam_user`
-  - `aws_iam_user_login_profile` (auto-generated password, `password_reset_required = true`)
-  - `aws_iam_user_policy_attachment` → AWS managed `PowerUserAccess` policy
-    (broad access for building; excludes IAM/org-level changes)
-
-Both variables default to an empty list, so `terraform plan` for every other
-existing project/account (`tapshalkar-com`, `-web`, `-sandbox`, `-personal`,
-certs accounts) shows **no diff** — this is purely additive.
-
-In `vista-hackathon-2026` itself, both lists start empty with a
-`# TODO: fill in teammate emails/usernames before the event` comment in
-`terraform.tfvars`, since the team roster isn't finalized yet. Filling them in
-and re-applying is the only step needed once names are known.
+**Superseded.** The original design extended both shared baseline modules with
+optional `teammate_emails` / `teammate_usernames` variables (empty-list default,
+so existing projects would see no diff). This is no longer part of this spec —
+see "Teammate IAM access" under Non-Goals. `vista-hackathon-2026` is provisioned
+here as a plain baseline instantiation owned solely by `admin_user`
+(GCP)/the account creator (AWS), identical in shape to every other personal
+project in this repo. No baseline module changes are needed.
 
 ### 3. AI/agentic service enablement
 
@@ -116,18 +103,18 @@ generated next-steps output as a pre-event manual step.
 
 ## Testing / Verification
 
-- `terraform validate` and `terraform fmt -recursive` on both new module
-  extensions and the two new project/account roots.
-- `terraform plan` on every *existing* GCP project and AWS account to confirm
-  the new `teammate_emails` / `teammate_usernames` variables produce **zero
-  diff** (empty-list default proves backward compatibility).
+- `terraform validate` and `terraform fmt -recursive` on the two new
+  project/account roots.
+- `terraform plan` on every *other* existing GCP project and AWS account to
+  confirm this change touches no shared module code and produces no diff
+  anywhere else in the repo.
 - `terraform plan` on `vista-hackathon-2026` (both providers) reviewed by hand
   before `terraform apply`, since this creates real billable resources.
 - Manual: confirm budget alert email/PagerDuty subscription arrives after apply.
 
 ## Open Items (deferred, not blocking)
 
-- Actual teammate emails/usernames — filled in once the roster is finalized,
-  before or at the event.
+- The hackathon-specific repo (teammate IAM, app code) — to be created
+  separately, not part of this spec.
 - Bedrock model access request — manual console step, done once account ID is
   known (after `aws organizations create-account`).
