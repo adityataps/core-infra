@@ -27,3 +27,5 @@ enabled_apis = [
   "secretmanager.googleapis.com",
   "storage.googleapis.com",
 ]
+
+# enable_data_access_audit_logs = true  # set to false to disable billable DATA_READ/WRITE audit logs
