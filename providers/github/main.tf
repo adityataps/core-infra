@@ -65,6 +65,15 @@ data "terraform_remote_state" "aws_certs" {
   }
 }
 
+
+data "terraform_remote_state" "aws_vista_hackathon_2026" {
+  backend = "gcs"
+  config = {
+    bucket = "tapshalkar-com-tfstate"
+    prefix = "aws/accounts/personal/vista-hackathon-2026"
+  }
+}
+
 # ── AWS Actions secrets ────────────────────────────────────────────────────────
 
 resource "github_actions_secret" "aws_management_role_arn" {
@@ -89,6 +98,13 @@ resource "github_actions_secret" "aws_certs_role_arn" {
   repository      = data.github_repository.core_infra.name
   secret_name     = "AWS_CERTS_ROLE_ARN"
   plaintext_value = data.terraform_remote_state.aws_certs.outputs.github_actions_role_arn
+}
+
+
+resource "github_actions_secret" "aws_vista_hackathon_2026_role_arn" {
+  repository      = data.github_repository.core_infra.name
+  secret_name     = "AWS_VISTA_HACKATHON_2026_ROLE_ARN"
+  plaintext_value = data.terraform_remote_state.aws_vista_hackathon_2026.outputs.github_actions_role_arn
 }
 
 # ── AWS Actions variables ──────────────────────────────────────────────────────

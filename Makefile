@@ -28,6 +28,7 @@ RUN := scripts/tf-module.sh $(CMD) $(AUTO_APPROVE)
         github-sync \
         gcp-personal-tapshalkar-com-web \
         gcp-personal-vista-hackathon-2026 \
+        aws-personal-vista-hackathon-2026 \
         ci-plan
 
 # ── Entry point ───────────────────────────────────────────────────────────────
@@ -49,7 +50,8 @@ github-sync: gcp-management aws-management \
              gcp-personal-tapshalkar-com gcp-personal-sandbox \
              aws-personal-tapshalkar-com aws-personal-sandbox aws-certs \
              gcp-personal-tapshalkar-com-web \
-             gcp-personal-vista-hackathon-2026
+             gcp-personal-vista-hackathon-2026 \
+             aws-personal-vista-hackathon-2026
 	@$(RUN) providers/github
 
 # ── Tier 3: depend on management accounts ─────────────────────────────────────
@@ -74,6 +76,10 @@ gcp-personal-tapshalkar-com-web: pagerduty gcp-org github-init gcp-management
 
 gcp-personal-vista-hackathon-2026: pagerduty gcp-org github-init gcp-management
 	@$(RUN) providers/gcp/projects/personal/vista-hackathon-2026
+
+
+aws-personal-vista-hackathon-2026: pagerduty aws-org github-init aws-management
+	@$(RUN) providers/aws/accounts/personal/vista-hackathon-2026
 
 # ── Tier 2: depend on github + pagerduty + org layers ─────────────────────────
 gcp-management: pagerduty gcp-org github-init
