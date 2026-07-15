@@ -3,6 +3,7 @@ resource "aws_organizations_organization" "this" {
 
   aws_service_access_principals = [
     "sso.amazonaws.com",
+    "account.amazonaws.com",
   ]
 }
 
@@ -43,8 +44,9 @@ resource "aws_identitystore_user" "aditya" {
 # ── Admin permission set ──────────────────────────────────────────────────────
 
 resource "aws_ssoadmin_permission_set" "admin" {
-  name         = "AdministratorAccess"
-  instance_arn = local.sso_instance_arn
+  name             = "AdministratorAccess"
+  instance_arn     = local.sso_instance_arn
+  session_duration = "PT12H"
 }
 
 resource "aws_ssoadmin_managed_policy_attachment" "admin" {
