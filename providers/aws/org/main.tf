@@ -46,7 +46,7 @@ resource "aws_identitystore_user" "aditya" {
 resource "aws_ssoadmin_permission_set" "admin" {
   name             = "AdministratorAccess"
   instance_arn     = local.sso_instance_arn
-  session_duration = "PT12H"
+  session_duration = "PT6H"
 }
 
 resource "aws_ssoadmin_managed_policy_attachment" "admin" {
