@@ -20,6 +20,7 @@ enabled_apis = [
   "logging.googleapis.com",
   "monitoring.googleapis.com",
   "iamcredentials.googleapis.com",
+  "artifactregistry.googleapis.com",
 ]
 
 # enable_data_access_audit_logs = true  # set to false to disable billable DATA_READ/WRITE audit logs
