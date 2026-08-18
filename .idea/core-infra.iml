@@ -26,6 +26,10 @@
       <excludeFolder url="file://$MODULE_DIR$/providers/cloudflare/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/cloudflare/modules/zone/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/tapshalkar-com-web/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/vista-hackathon-2026/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/aws/accounts/personal/vista-hackathon-2026/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/tapshalkar-com-vista-hackathon-2026/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/providers/gcp/projects/personal/tapshalkar-vista-hackathon-26/.terraform" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
