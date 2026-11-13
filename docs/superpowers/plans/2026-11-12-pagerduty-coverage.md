@@ -27,7 +27,7 @@
 - [x] Remove five unsupported CloudWatch budget HTTPS subscriptions after verifying replacement routes.
 - [x] Apply budget-only scope: remove the three deployed GCP workload policies and seven AWS workload alarms plus their routes; keep two forwarder health alarms console-only. Do not deploy the proposed Scheduler alert.
 - [x] Verify budget-only live routing, format/validate, and update generated documentation.
-- [ ] Publish the final budget-only change.
+- [x] Publish the final budget-only change (merged PR #189; Plan and Validate checks pass).
 
 ## Execution notes
 
@@ -39,3 +39,5 @@
 - A speculative application-topic policy change was unnecessary and was never published or applied.
 
 - Final budget-only verification: all six AWS routes confirmed, five administrator email subscriptions retained, zero PagerDuty HTTPS SNS routes across the five accounts in us-east-1; two management health alarms have disabled/empty actions. All five GCP projects have zero workload alert policies while all six budgets retain both email routes.
+
+- Subsequent user-approved app repair: tapshalkar.com PR #47 grants invocation on graph-gen only and sets Sunday 06:00 UTC scheduling. The inspected plan had exactly one IAM create and one schedule update; both were applied and live-verified without invoking the job. PagerDuty remains budget-only.
