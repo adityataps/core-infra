@@ -62,5 +62,6 @@ module "baseline" {
   github_repo                   = data.terraform_remote_state.github.outputs.core_infra_repo_full_name
   enable_data_access_audit_logs = var.enable_data_access_audit_logs
   pagerduty_integration_key     = data.terraform_remote_state.pagerduty.outputs.gcp_integration_key
+  pagerduty_budget_email        = data.terraform_remote_state.pagerduty.outputs.gcp_budget_integration_email
   folder_id                     = data.terraform_remote_state.gcp_org.outputs.personal_folder_resource_name
 }

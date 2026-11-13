@@ -26,6 +26,7 @@ No modules.
 | [google_iam_workload_identity_pool.github](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool) | resource |
 | [google_iam_workload_identity_pool_provider.github](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool_provider) | resource |
 | [google_monitoring_notification_channel.budget_email](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/monitoring_notification_channel) | resource |
+| [google_monitoring_notification_channel.budget_pagerduty](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/monitoring_notification_channel) | resource |
 | [google_monitoring_notification_channel.pagerduty](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/monitoring_notification_channel) | resource |
 | [google_project.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project) | resource |
 | [google_project_iam_audit_config.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_audit_config) | resource |
@@ -48,6 +49,7 @@ No modules.
 | <a name="input_folder_id"></a> [folder\_id](#input\_folder\_id) | GCP folder to place this project under (e.g. folders/1234567890). Null places the project directly under the organization. | `string` | `null` | no |
 | <a name="input_github_repo"></a> [github\_repo](#input\_github\_repo) | GitHub repository for Workload Identity Federation in 'owner/repo' format (e.g. 'my-org/my-repo'). Set to null to skip WIF setup. | `string` | `null` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels to apply to the GCP project | `map(string)` | <pre>{<br/>  "managed-by": "terraform"<br/>}</pre> | no |
+| <a name="input_pagerduty_budget_email"></a> [pagerduty\_budget\_email](#input\_pagerduty\_budget\_email) | PagerDuty email integration address for Billing Budgets. Null disables the additional budget recipient. | `string` | `null` | no |
 | <a name="input_pagerduty_integration_key"></a> [pagerduty\_integration\_key](#input\_pagerduty\_integration\_key) | PagerDuty integration key for GCP monitoring alerts. Null disables PagerDuty routing. | `string` | `null` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | The GCP project ID to configure | `string` | n/a | yes |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Human-readable display name for the GCP project | `string` | n/a | yes |
@@ -57,6 +59,7 @@ No modules.
 
 | Name | Description |
 | ---- | ----------- |
+| <a name="output_budget_notification_channel_ids"></a> [budget\_notification\_channel\_ids](#output\_budget\_notification\_channel\_ids) | Email notification channel IDs for administrator and optional PagerDuty budget delivery. |
 | <a name="output_github_actions_service_account_email"></a> [github\_actions\_service\_account\_email](#output\_github\_actions\_service\_account\_email) | Email of the GitHub Actions service account (null if github\_repo not set) |
 | <a name="output_project_id"></a> [project\_id](#output\_project\_id) | The GCP project ID |
 | <a name="output_project_number"></a> [project\_number](#output\_project\_number) | The GCP project number |

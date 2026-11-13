@@ -26,6 +26,7 @@
 | Name | Type |
 | ---- | ---- |
 | [google_billing_account_iam_member.github_actions_budget_viewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/billing_account_iam_member) | resource |
+| [google_billing_budget.legacy](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/billing_budget) | resource |
 | [google_organization_iam_member.github_actions_browser](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
 | [google_organization_iam_member.github_actions_org_iam_viewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
 | [google_project_iam_member.github_actions_project_viewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |

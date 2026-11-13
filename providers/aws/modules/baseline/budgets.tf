@@ -29,15 +29,12 @@ resource "aws_sns_topic_subscription" "email" {
   endpoint  = var.notification_email
 }
 
-resource "aws_sns_topic_subscription" "pagerduty" {
-  count     = var.pagerduty_integration_key != "" ? 1 : 0
+# Budget notifications need transformation before Events API delivery.
+resource "aws_sns_topic_subscription" "budget_forwarder" {
+  count     = var.enable_budget_forwarder ? 1 : 0
   topic_arn = aws_sns_topic.budget_alerts.arn
-  protocol  = "https"
-  endpoint  = "https://events.pagerduty.com/integration/${var.pagerduty_integration_key}/enqueue"
-
-  # PagerDuty's service integration endpoint (/integration/<key>/enqueue) handles SNS
-  # SubscriptionConfirmation automatically — no manual confirmation step required.
-  endpoint_auto_confirms = true
+  protocol  = "lambda"
+  endpoint  = var.budget_forwarder_lambda_arn
 }
 
 resource "aws_budgets_budget" "this" {

@@ -28,8 +28,8 @@ No modules.
 | [aws_iam_role_policy_attachment.github_actions_admin](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_sns_topic.budget_alerts](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
 | [aws_sns_topic_policy.budget_alerts](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_policy) | resource |
+| [aws_sns_topic_subscription.budget_forwarder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
 | [aws_sns_topic_subscription.email](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
-| [aws_sns_topic_subscription.pagerduty](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 
 ## Inputs
@@ -38,10 +38,11 @@ No modules.
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_account_name"></a> [account\_name](#input\_account\_name) | Logical name of this account (used in IAM role name, e.g. 'personal', 'certs-1') | `string` | n/a | yes |
 | <a name="input_budget_amount"></a> [budget\_amount](#input\_budget\_amount) | Monthly budget cap in USD for this account | `number` | `10` | no |
+| <a name="input_budget_forwarder_lambda_arn"></a> [budget\_forwarder\_lambda\_arn](#input\_budget\_forwarder\_lambda\_arn) | Central SNS-to-PagerDuty budget forwarder ARN. Required when enable\_budget\_forwarder is true. | `string` | `null` | no |
 | <a name="input_budget_thresholds"></a> [budget\_thresholds](#input\_budget\_thresholds) | Fractional spend thresholds that trigger SNS alerts (e.g. [0.5, 0.9, 1.0] = 50%, 90%, 100%) | `list(number)` | <pre>[<br/>  0.5,<br/>  0.9,<br/>  1<br/>]</pre> | no |
+| <a name="input_enable_budget_forwarder"></a> [enable\_budget\_forwarder](#input\_enable\_budget\_forwarder) | Create the budget forwarder subscription. Separate from its ARN so resource counts are known before the function exists. | `bool` | `false` | no |
 | <a name="input_github_repo"></a> [github\_repo](#input\_github\_repo) | GitHub repository in 'owner/repo' format. OIDC tokens are scoped to this repo only. | `string` | n/a | yes |
 | <a name="input_notification_email"></a> [notification\_email](#input\_notification\_email) | Email address for budget alert SNS subscription | `string` | n/a | yes |
-| <a name="input_pagerduty_integration_key"></a> [pagerduty\_integration\_key](#input\_pagerduty\_integration\_key) | PagerDuty Amazon CloudWatch service integration key. When set, an SNS HTTPS subscription is created to forward budget alerts to PagerDuty via the /integration/<key>/enqueue endpoint, which handles SNS SubscriptionConfirmation automatically. | `string` | `""` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region for this account | `string` | `"us-east-1"` | no |
 
 ## Outputs
