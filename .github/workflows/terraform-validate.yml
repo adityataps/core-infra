@@ -1,0 +1,59 @@
+name: Terraform Validate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'bootstrap/**'
+      - 'providers/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'Makefile'
+      - '.github/workflows/**'
+  push:
+    branches: [main]
+    paths:
+      - 'bootstrap/**'
+      - 'providers/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'Makefile'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Terraform Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.5"
+          terraform_wrapper: false
+
+      - name: Check formatting
+        run: terraform fmt -check -recursive
+
+      - name: Test Terraform scripts
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Validate all Terraform configurations
+        run: |
+          # init without a backend never reads remote state or needs cloud credentials.
+          find bootstrap providers -type d -name .terraform -prune -o -type f -name '*.tf' -print \
+            | sed 's|/[^/]*$||' | sort -u > /tmp/terraform-roots.txt
+          while IFS= read -r root; do
+            echo "::group::$root"
+            terraform -chdir="$root" init -backend=false -input=false -lockfile=readonly -no-color
+            terraform -chdir="$root" validate -no-color
+            echo "::endgroup::"
+          done < /tmp/terraform-roots.txt
