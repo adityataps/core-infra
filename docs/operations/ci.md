@@ -8,6 +8,12 @@
 
 Both planning workflows use `scripts/tf-all.sh` to normalize status: `0` means clean, `1` means error, and `2` means pending changes. Do not interpret Make exit codes as Terraform exit codes.
 
+Provider lock files include verified checksums for `darwin_arm64` and `linux_amd64`. Keep both platforms when updating dependencies so backend-free, read-only initialization also works on hosted Linux runners:
+
+```bash
+terraform providers lock -platform=darwin_arm64 -platform=linux_amd64
+```
+
 ## State lock recovery
 
 The management root declares `google_storage_bucket_iam_member.github_actions_state_locks` in `ci.tf`. This grants the CI service account object administration only on `.tflock` objects in the shared bucket; it does not grant writes to state files. Existing state-read permissions are still required.
@@ -26,6 +32,17 @@ terraform apply /tmp/ci-state-locks.tfplan
 ```
 
 The targeted plan is a one-time recovery operation, not the normal deployment workflow. Follow it with a full plan to check for other pending changes. The first corrected CI run may reveal permissions or drift hidden by the old false-success handling.
+
+## Read permissions
+
+`ci.tf` also declares the read access required by the complete GCP plan scope:
+
+- Organization Browser for organization/folder discovery.
+- Organization Security Reviewer for reading its IAM policy. This predefined read-only role also permits IAM metadata review across the organization; organization resource-attribute conditions are not supported for narrowing this policy read.
+- Project Viewer on the three managed personal projects, in addition to the management project's existing access.
+- Billing Account Viewer on the configured billing account, for reading project budgets.
+
+Deploy these bindings from the management root with an administrator identity using a reviewed full Terraform plan. They add no resource write permissions. A new project must receive equivalent reader access when it is added to `ci-plan`.
 
 ## Restore the schedule
 

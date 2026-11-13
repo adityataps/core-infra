@@ -6,6 +6,7 @@ provider "registry.terraform.io/mongodb/mongodbatlas" {
   constraints = "~> 2.0"
   hashes = [
     "h1:ANTVh54j6xFC+LFAxVoPCph3hp/Mdft/6GaykhCC2IU=",
+    "h1:zCssCP9iZlw2dwzYAUmumI3iUgbJBj+sie/il+rKjiI=",
     "zh:0abc6ee2ae0fcfa1d6caec7892ba31527dc2edc01a1e3061484f5d4a1c9f974a",
     "zh:0dfcf4d37f9e4fe05d3075ebda43aa70d97197f6e50a69ffa2a73916fd93e5a3",
     "zh:15d81e2e81ce1769d2ba3b9cdcddeb1f40086fdcf933661f15d5f5b212e2d109",

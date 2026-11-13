@@ -12,7 +12,7 @@
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_pagerduty"></a> [pagerduty](#provider\_pagerduty) | 3.32.1 |
+| <a name="provider_pagerduty"></a> [pagerduty](#provider\_pagerduty) | 3.32.3 |
 
 ## Modules
 

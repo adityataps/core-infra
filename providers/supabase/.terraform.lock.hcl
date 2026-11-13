@@ -5,6 +5,7 @@ provider "registry.terraform.io/supabase/supabase" {
   version     = "1.9.0"
   constraints = "~> 1.0"
   hashes = [
+    "h1:0MJbpRYSYfHppH7Q0ywDQ4CBX16HaubWRMVk2tVhYvI=",
     "h1:ydHsmCRvxcXgIkh+Jl7hAoIepiqZRTPd0yPT3Eq2HiU=",
     "zh:062c135caea41f09cc969ada9117a952368f844697b8fad4a6fce9c432960077",
     "zh:0c7879a9af7b135ae6d18b1bf9614fcf86a3da235596d25ecc9222420477865f",
