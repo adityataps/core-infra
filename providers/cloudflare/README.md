@@ -1,6 +1,14 @@
 # cloudflare
 
-Manages Cloudflare DNS zones for all domains. `zones.tf` is the single source of truth — add one entry per domain. The `modules/zone/` module owns the `cloudflare_zone` resource and all DNS record types.
+Manages Cloudflare DNS zones and shared domain records. `zones.tf` is the source of truth for records owned by `core-infra` — add one entry per domain. The `modules/zone/` module owns the `cloudflare_zone` resource and supports all DNS record types.
+
+## DNS ownership
+
+`core-infra` manages zones and shared domain configuration, such as mail routing and domain verification. Individual project repositories manage their own infrastructure and DNS records, looking up the existing zone rather than creating it. Each record must have exactly one Terraform owner.
+
+The website records for `tapshalkar.com` (`@` and `aditya` A records, and the `www` CNAME) belong to [`adityataps/tapshalkar.com`, `infra/dns.tf`](https://github.com/adityataps/tapshalkar.com/blob/main/infra/dns.tf). Do not declare or import those records here. Their addresses follow the load balancer allocated by the project.
+
+When handing records to another repository, confirm the destination state owns the live records, remove their declarations here, and detach any old entries with `terraform state rm`. Removing a state entry does not delete DNS. Review the resulting plan to ensure it does not delete or recreate the project-owned records.
 
 ## Setup
 

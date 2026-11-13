@@ -1,15 +1,13 @@
 locals {
   zones = {
     "tapshalkar.com" = {
+      # Website DNS is owned by adityataps/tapshalkar.com (infra/dns.tf):
+      #   @ and aditya (A), www (CNAME). Do not declare or import them here.
       # Excluded from Terraform — managed by cloudflare-ddns (dynamic home IP):
       #   ddns.tapshalkar.com, homelab.tapshalkar.com, vpn.tapshalkar.com, etc.
       # Excluded — Cloudflare-auto-managed DCV CNAME (no TLD target):
       #   _41a23e238f189aadd2dec8aa46729106.tapshalkar.com
-      a_records = [
-        { name = "@", content = "34.149.115.30", proxied = true, ttl = 1 },
-        { name = "aditya", content = "34.149.115.30", proxied = true, ttl = 1 },
-        { name = "www", content = "34.149.115.30", proxied = true, ttl = 1 },
-      ]
+      a_records = []
       mx_records = [
         { name = "@", content = "smtp.google.com", priority = 1, ttl = 1 },
         { name = "send", content = "feedback-smtp.us-east-1.amazonses.com", priority = 10, ttl = 1 },

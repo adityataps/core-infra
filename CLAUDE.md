@@ -44,7 +44,7 @@ terraform destroy
 - `providers/gcp/modules/baseline/` — reusable module configuring GCP project defaults.
 - `providers/gcp/projects/management/` — management/infra projects (TF state, WIF, billing). `tapshalkar-com` lives here.
 - `providers/gcp/projects/<folder>/<name>/` — per-project instantiation of the baseline module, grouped by folder (`personal/`, `certs/`).
-- `providers/cloudflare/` — Cloudflare DNS zones. `zones.tf` is the single source of truth for all domains; `modules/zone/` is the reusable per-zone module.
+- `providers/cloudflare/` — Cloudflare DNS zones and shared domain records. `zones.tf` is the source of truth for core-owned records; individual project repositories own their project-specific DNS. `modules/zone/` is the reusable per-zone module.
 - `providers/pagerduty/` — PagerDuty service + integration. Apply before GCP projects.
 - `providers/aws/` — AWS infrastructure (future, same pattern).
 - `scripts/` — helper scripts for import, init, etc.
@@ -124,7 +124,9 @@ Point the new project's `main.tf` at the same `terraform_remote_state.pagerduty`
 
 ## Cloudflare DNS
 
-All zones are managed from a single root at `providers/cloudflare/`. `zones.tf` is the single source of truth — one entry per domain. The `modules/zone/` module owns the `cloudflare_zone` resource and all DNS record types (A, MX, CNAME, TXT, SRV).
+All zones are managed from a single root at `providers/cloudflare/`. `zones.tf` is the source of truth for core-owned records — one entry per domain. The `modules/zone/` module owns the `cloudflare_zone` resource and supports all DNS record types (A, MX, CNAME, TXT, SRV).
+
+Project repositories own their resources and project-specific DNS, using a data source to look up the zone. Do not duplicate those records in this state. In particular, `@` and `aditya` A records and the `www` CNAME for `tapshalkar.com` are owned by `adityataps/tapshalkar.com` in `infra/dns.tf`. When transferring ownership, detach old state entries without destroying live records; see `providers/cloudflare/README.md`.
 
 ### First-time setup
 
