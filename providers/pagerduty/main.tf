@@ -36,6 +36,16 @@ resource "pagerduty_service_integration" "gcp" {
   vendor  = data.pagerduty_vendor.gcp.id
 }
 
+# Billing Budgets accepts email channels, not the Monitoring vendor channel.
+resource "pagerduty_service_integration" "gcp_budgets" {
+  name                    = "Google Cloud Billing Budgets"
+  service                 = pagerduty_service.gcp_monitoring.id
+  type                    = "generic_email_inbound_integration"
+  integration_email       = var.gcp_budget_integration_email
+  email_filter_mode       = "all-email"
+  email_incident_creation = "on_new_email_subject"
+}
+
 data "pagerduty_vendor" "cloudwatch" {
   name = "Amazon CloudWatch"
 }
@@ -52,4 +62,10 @@ resource "pagerduty_service_integration" "aws_cloudwatch" {
   name    = data.pagerduty_vendor.cloudwatch.name
   service = pagerduty_service.aws_billing.id
   vendor  = data.pagerduty_vendor.cloudwatch.id
+}
+
+resource "pagerduty_service_integration" "aws_budgets" {
+  name    = "AWS Billing Budgets"
+  service = pagerduty_service.aws_billing.id
+  type    = "events_api_v2_inbound_integration"
 }

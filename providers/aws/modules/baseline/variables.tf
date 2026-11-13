@@ -31,8 +31,14 @@ variable "notification_email" {
   description = "Email address for budget alert SNS subscription"
 }
 
-variable "pagerduty_integration_key" {
+variable "budget_forwarder_lambda_arn" {
   type        = string
-  description = "PagerDuty Amazon CloudWatch service integration key. When set, an SNS HTTPS subscription is created to forward budget alerts to PagerDuty via the /integration/<key>/enqueue endpoint, which handles SNS SubscriptionConfirmation automatically."
-  default     = ""
+  description = "Central SNS-to-PagerDuty budget forwarder ARN. Required when enable_budget_forwarder is true."
+  default     = null
+}
+
+variable "enable_budget_forwarder" {
+  type        = bool
+  description = "Create the budget forwarder subscription. Separate from its ARN so resource counts are known before the function exists."
+  default     = false
 }

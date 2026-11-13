@@ -102,6 +102,13 @@ variable "pagerduty_integration_key" {
   sensitive   = true
 }
 
+variable "pagerduty_budget_email" {
+  type        = string
+  description = "PagerDuty email integration address for Billing Budgets. Null disables the additional budget recipient."
+  default     = null
+  sensitive   = true
+}
+
 variable "folder_id" {
   type        = string
   description = "GCP folder to place this project under (e.g. folders/1234567890). Null places the project directly under the organization."

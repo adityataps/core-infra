@@ -8,6 +8,14 @@ output "project_number" {
   value       = google_project.this.number
 }
 
+output "budget_notification_channel_ids" {
+  description = "Email notification channel IDs for administrator and optional PagerDuty budget delivery."
+  value = concat(
+    [google_monitoring_notification_channel.budget_email.id],
+    google_monitoring_notification_channel.budget_pagerduty[*].id,
+  )
+}
+
 output "github_actions_service_account_email" {
   description = "Email of the GitHub Actions service account (null if github_repo not set)"
   value       = length(google_service_account.github_actions) > 0 ? google_service_account.github_actions[0].email : null

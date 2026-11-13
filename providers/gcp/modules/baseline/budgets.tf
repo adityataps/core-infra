@@ -21,6 +21,19 @@ resource "google_monitoring_notification_channel" "pagerduty" {
   depends_on = [google_project_service.apis]
 }
 
+resource "google_monitoring_notification_channel" "budget_pagerduty" {
+  count        = var.pagerduty_budget_email != null ? 1 : 0
+  project      = google_project.this.project_id
+  display_name = "PagerDuty Budget Email — ${var.project_id}"
+  type         = "email"
+
+  labels = {
+    email_address = var.pagerduty_budget_email
+  }
+
+  depends_on = [google_project_service.apis]
+}
+
 resource "google_billing_budget" "project" {
   billing_account = var.billing_account
   display_name    = "${var.project_id}-monthly-budget"
@@ -45,11 +58,11 @@ resource "google_billing_budget" "project" {
   }
 
   all_updates_rule {
-    # Billing Budgets API only supports email and Pub/Sub notification channels.
-    # PagerDuty routing for budget alerts is not supported here.
-    monitoring_notification_channels = [
-      google_monitoring_notification_channel.budget_email.id,
-    ]
+    # Billing accepts email channels; use a dedicated PagerDuty email integration.
+    monitoring_notification_channels = concat(
+      [google_monitoring_notification_channel.budget_email.id],
+      google_monitoring_notification_channel.budget_pagerduty[*].id,
+    )
     disable_default_iam_recipients = true
   }
 }
