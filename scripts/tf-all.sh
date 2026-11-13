@@ -8,6 +8,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT"
 
 # ── Parse args ────────────────────────────────────────────────────────────────
 CMD="${1:-}"
@@ -35,7 +36,7 @@ PROGRESS_DIR=$(mktemp -d /tmp/tf-progress.XXXXXX)
 trap 'rm -rf "$PROGRESS_DIR"' EXIT
 
 # Derive total dynamically so it stays correct for any make target
-TOTAL_MODULES=$(make --dry-run "$MAKE_TARGET" CMD=plan 2>/dev/null | grep -c 'tf-module\.sh' || echo 0)
+TOTAL_MODULES=$(make --dry-run "$MAKE_TARGET" CMD=plan 2>/dev/null | awk '/tf-module\.sh/ {count++} END {print count+0}') || TOTAL_MODULES=0
 
 printf '0'                   > "$PROGRESS_DIR/counter"
 printf '%s' "$TOTAL_MODULES" > "$PROGRESS_DIR/total"
@@ -44,7 +45,6 @@ touch "$PROGRESS_DIR/results"
 export TF_PROGRESS_DIR="$PROGRESS_DIR"
 
 # ── Run ───────────────────────────────────────────────────────────────────────
-cd "$REPO_ROOT"
 set +e
 # -k (keep going) in plan mode: tf-module.sh exits 0 for "changes detected" so
 # Make prerequisites are never broken by pending diffs. Apply mode stays
@@ -61,7 +61,7 @@ set -e
 # tf-module.sh exits 0 for both clean and drift to keep Make deps intact.
 # Re-derive the correct signal here: 1=error, 2=drift, 0=all clean.
 if [[ "$CMD" == "plan" ]]; then
-  if grep -q '^✗' "$PROGRESS_DIR/results" 2>/dev/null; then
+  if [[ $MAKE_EXIT -ne 0 ]] || grep -q '^✗' "$PROGRESS_DIR/results" 2>/dev/null; then
     MAKE_EXIT=1
   elif grep -q '^~' "$PROGRESS_DIR/results" 2>/dev/null; then
     MAKE_EXIT=2

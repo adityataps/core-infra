@@ -8,7 +8,8 @@
 # Exit codes:
 #   0  success (no changes for plan, applied/skipped for apply)
 #   1  terraform error
-#   2  drift detected (plan mode) or user aborted with 'q' (apply mode)
+#   2  user aborted with 'q' (apply mode)
+# Plan drift is recorded in TF_PROGRESS_DIR; tf-all.sh reports it as exit 2.
 set -euo pipefail
 
 if [[ $# -lt 3 ]]; then
@@ -47,7 +48,15 @@ TFINIT_LOG=$(mktemp /tmp/tf-init.XXXXXX)
 
 # ── Plan ──────────────────────────────────────────────────────────────────────
 TFPLAN=$(mktemp /tmp/tf-plan.XXXXXX)
-trap 'rm -f "$TFINIT_LOG" "$TFPLAN"' EXIT
+cleanup() {
+  local exit_code=$?
+  if [[ $exit_code -ne 0 && -n "$PROGRESS_DIR" ]]; then
+    echo "✗ error      $MODULE" >> "$PROGRESS_DIR/results"
+  fi
+  rm -f "$TFINIT_LOG" "$TFPLAN"
+  exit "$exit_code"
+}
+trap cleanup EXIT
 
 terraform init \
   -backend-config="bucket=$STATE_BUCKET" \
@@ -62,7 +71,7 @@ grep -E "^(Terraform|Error|Warning|Initializing)" "$TFINIT_LOG" || true
 
 if [[ "$CMD" == "plan" ]]; then
   set +e
-  terraform plan -detailed-exitcode -input=false -out="$TFPLAN"
+  terraform plan -detailed-exitcode -input=false -lock-timeout=5m -out="$TFPLAN"
   PLAN_EXIT=$?
   set -e
 
@@ -70,23 +79,25 @@ if [[ "$CMD" == "plan" ]]; then
     case $PLAN_EXIT in
       0) echo "○ no change  $MODULE" >> "$PROGRESS_DIR/results" ;;
       2) echo "~ changes    $MODULE" >> "$PROGRESS_DIR/results" ;;
-      1) echo "✗ error      $MODULE" >> "$PROGRESS_DIR/results" ;;
     esac
   fi
   # Exit 0 for both "no changes" (0) and "changes detected" (2) so Make does not
   # treat a module with pending changes as a failed prerequisite — that would skip
   # all downstream modules. tf-all.sh synthesizes the real exit from the results
   # file. Only exit 1 on actual Terraform errors.
-  [[ $PLAN_EXIT -eq 1 ]] && exit 1 || exit 0
+  case $PLAN_EXIT in
+    0|2) exit 0 ;;
+    *) exit 1 ;;
+  esac
 fi
 
 # ── Apply ─────────────────────────────────────────────────────────────────────
 set +e
-terraform plan -detailed-exitcode -input=false -out="$TFPLAN"
+terraform plan -detailed-exitcode -input=false -lock-timeout=5m -out="$TFPLAN"
 PLAN_EXIT=$?
 set -e
 
-[[ $PLAN_EXIT -eq 1 ]] && exit 1
+[[ $PLAN_EXIT -ne 0 && $PLAN_EXIT -ne 2 ]] && exit 1
 
 if [[ $PLAN_EXIT -eq 0 ]]; then
   echo "No changes. Skipping $MODULE"
@@ -114,4 +125,6 @@ else
   esac
 fi
 
-[[ -n "$PROGRESS_DIR" ]] && echo "$RESULT" >> "$PROGRESS_DIR/results"
+if [[ -n "$PROGRESS_DIR" ]]; then
+  echo "$RESULT" >> "$PROGRESS_DIR/results"
+fi

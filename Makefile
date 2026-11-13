@@ -108,8 +108,8 @@ supabase:
 # ── CI: GCP WIF auth only (no AWS/GitHub/third-party credentials needed) ──────
 # Remote state for all these modules already exists in GCS, so inter-module
 # deps are not needed for plan — the state is read from GCS via WIF auth.
+# PagerDuty state is read by GCP roots; planning its root needs separate API credentials.
 ci-plan:
-	@$(RUN) providers/pagerduty
 	@$(RUN) providers/gcp/org
 	@$(RUN) providers/gcp/projects/management/tapshalkar-com
 	@$(RUN) providers/gcp/projects/personal/tapshalkar-com-personal

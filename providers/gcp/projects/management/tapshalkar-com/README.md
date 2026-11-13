@@ -12,6 +12,7 @@
 
 | Name | Version |
 | ---- | ------- |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.45.2 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
@@ -24,6 +25,7 @@
 
 | Name | Type |
 | ---- | ---- |
+| [google_storage_bucket_iam_member.github_actions_state_locks](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [terraform_remote_state.gcp_org](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.github](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.pagerduty](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
