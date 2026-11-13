@@ -41,6 +41,15 @@ resource "google_project_iam_member" "github_actions_project_viewer" {
   member  = "serviceAccount:${module.baseline.github_actions_service_account_email}"
 }
 
+# Basic Viewer does not authorize the pool API used by the pinned Google provider.
+resource "google_project_iam_member" "github_actions_wif_viewer" {
+  for_each = google_project_iam_member.github_actions_project_viewer
+
+  project = each.key
+  role    = "roles/iam.workloadIdentityPoolViewer"
+  member  = "serviceAccount:${module.baseline.github_actions_service_account_email}"
+}
+
 resource "google_billing_account_iam_member" "github_actions_budget_viewer" {
   billing_account_id = var.billing_account
   role               = "roles/billing.viewer"

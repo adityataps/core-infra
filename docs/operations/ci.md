@@ -39,7 +39,7 @@ The targeted plan is a one-time recovery operation, not the normal deployment wo
 
 - Organization Browser for organization/folder discovery.
 - Organization Security Reviewer for reading its IAM policy. This predefined read-only role also permits IAM metadata review across the organization; organization resource-attribute conditions are not supported for narrowing this policy read.
-- Project Viewer on the three managed personal projects, in addition to the management project's existing access.
+- Project Viewer and Workload Identity Pool Viewer on the three managed personal projects, in addition to the management project's existing access. The explicit pool role is needed for the API used by the pinned Google provider.
 - Billing Account Viewer on the configured billing account, for reading project budgets.
 
 Deploy these bindings from the management root with an administrator identity using a reviewed full Terraform plan. They add no resource write permissions. A new project must receive equivalent reader access when it is added to `ci-plan`.
