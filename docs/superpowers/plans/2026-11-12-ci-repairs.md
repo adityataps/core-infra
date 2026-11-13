@@ -11,7 +11,7 @@
 - [x] Add credential-free Terraform validation for all roots; skip authenticated plans for Dependabot and fork PRs. Remove PagerDuty from GCP-only planning because its provider requires separate credentials.
 - [x] Declare state-lock IAM permissions in the management root and validate Terraform. Applied the saved plan after verifying it contained exactly one IAM addition and no other changes.
 - [x] Audit Terraform and live PagerDuty resources. Document budget versus workload coverage and cloud resources blocked by expired authentication.
-- [ ] Review changes, run regression tests and workflow/config checks, restore the drift schedule, and verify a run when the fixes are deployed.
+- [x] Review changes, run regression tests and workflow/config checks, restore the drift schedule, and verify hosted Plan and Validate runs with the fixes.
 
 ## Verification
 
@@ -37,3 +37,4 @@ Run the real shell scripts with a fake Terraform executable so tests exercise Ma
 - Hosted PR checks caught previously hidden missing organization permissions and missing Linux platform checksums in read-only initialization. Adding scoped read grants for the full CI hierarchy and verified Linux/macOS provider hashes without upgrading providers. The cloud audit is complete; see `docs/operations/pagerduty-coverage.md` for live gaps.
 - Review ruling: GCP does not document organization resource-attribute conditions for IAM policy reads. Removed the proposed condition before applying it; use predefined read-only Organization Security Reviewer instead. Tradeoff: CI can review IAM metadata throughout the organization, rather than only the root policy. No new resource write rights are granted.
 - Hosted follow-up: organization and management plans now report no changes. The first personal project's pool refresh still denies `iam.workloadIdentityPools.get` with basic Viewer; adding explicit Workload Identity Pool Viewer on the same three projects, based on the observed API denial rather than role-metadata name assumptions.
+- Completed: ten CI IAM resources added in reviewed add-only plans; no resources changed or destroyed. Hosted Terraform Plan run `43352155791` reports no changes in all five GCP roots. Hosted Terraform Validate run `43352154144` passes all 21 configurations and the 12 regression tests. Drift workflow state is active again. PR `188` is ready for integration; a manual drift run on `main` will verify the published workflow.
